@@ -138,6 +138,25 @@ canvas.tall {
   backdrop-filter: blur(18px);
 }
 
+
+.top-dock-note {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.top-dock-note strong {
+  color: var(--green);
+}
+
+.mobile-intro-meta {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mobile-intro-meta .language-switch {
+  justify-self: end;
+}
 .dock-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -196,7 +215,7 @@ canvas.tall {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 0 0.65rem calc(6rem + env(safe-area-inset-bottom));
+  padding: 0 0.65rem calc(7rem + env(safe-area-inset-bottom));
 }
 
 .card {

@@ -128,6 +128,7 @@ function renderBand(bandKey) {
   });
 
   $('bandTitle').textContent = band.title;
+  if ($('mobileHemiNow')) $('mobileHemiNow').textContent = band.title;
   $('bandDescription').textContent = band.desc;
   $('presetChips').innerHTML = '';
 

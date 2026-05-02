@@ -134,7 +134,9 @@ export function updateUI() {
   const notes440 = getNotes('equal', 440, state.root, state.chord);
   const cents = getCentsDeviation(notes432[0].freq, notes440[0].freq);
 
-  $('chordName').textContent = `${state.root} ${chord.label}`;
+  const activeChordLabel = `${state.root} ${chord.label}`;
+  $('chordName').textContent = activeChordLabel;
+  if ($('mobileNowPlaying')) $('mobileNowPlaying').textContent = activeChordLabel;
   $('baseReadout').textContent = state.base;
   $('systemReadout').textContent = state.tuning === 'equal' ? 'Equal' : state.tuning;
   $('spreadReadout').textContent = `+${formatNumber(cents, 1)} cents`;
