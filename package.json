@@ -1,0 +1,29 @@
+{
+  "name": "432-vs-440-hz-comparator",
+  "version": "1.0.0",
+  "description": "Interactive web tool to compare 432 Hz vs 440 Hz tuning with harmonic geometry, cymatics and resonance visualizations",
+  "author": "432 vs 440 Hz Comparator",
+  "license": "MIT",
+  "scripts": {
+    "dev": "open index.html",
+    "build": "echo 'Static site, no build step needed'",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": [
+    "432hz",
+    "440hz",
+    "tuning",
+    "chord-visualizer",
+    "cymatics",
+    "harmonic-resonance",
+    "audio-visualization",
+    "frequency-comparison"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/432-vs-440-hz-comparator"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
