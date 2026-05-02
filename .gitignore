@@ -19,6 +19,7 @@ Thumbs.db
 
 .vscode/
 .idea/
+chrome-dev-profile/
 *.swp
 *.swo
 *~
