@@ -219,6 +219,34 @@ canvas.tall {
   min-width: 0;
 }
 
+.tuning-card {
+  transition: border-color 180ms ease, opacity 180ms ease, filter 180ms ease;
+}
+
+.tuning-card canvas,
+.tuning-card .legend,
+.tuning-card .intro {
+  transition: filter 180ms ease, opacity 180ms ease;
+}
+
+.tuning-card.is-muted {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.tuning-card.is-muted canvas {
+  filter: grayscale(1) saturate(0.22) brightness(0.62);
+  opacity: 0.62;
+}
+
+.tuning-card.is-muted .legend,
+.tuning-card.is-muted .intro {
+  opacity: 0.48;
+}
+
+.tuning-card.is-listening {
+  border-color: rgba(52, 211, 153, 0.34);
+}
+
 .sidebar {
   order: 2;
 }

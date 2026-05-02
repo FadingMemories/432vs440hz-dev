@@ -111,14 +111,8 @@ export function drawConsonancePlate(canvasId) {
   const { width, height } = canvas;
   const notes = getNotes(state.tuning === 'both' ? 'natural' : state.tuning, state.base, state.root, state.chord);
   const rootFrequency = notes[0].freq;
-  const chord = CHORDS[state.chord] || CHORDS.maj7;
-  const rootIndex = NOTES.indexOf(state.root);
-  const chordSignature = chord.intervals.reduce((sum, interval, index) => (
-    sum + (interval + 1) * (index + 2) + chord.ratios[index] * 5
-  ), rootIndex + 1);
   const offscreen = document.createElement('canvas');
-  const stable = state.base === 432;
-  const scale = window.innerWidth <= 720 ? 0.34 : 0.44;
+  const scale = 0.42;
 
   offscreen.width = Math.max(220, Math.floor(width * scale));
   offscreen.height = Math.max(160, Math.floor(height * scale));
@@ -129,12 +123,12 @@ export function drawConsonancePlate(canvasId) {
 
   for (let y = 0; y < offscreen.height; y += 1) {
     for (let x = 0; x < offscreen.width; x += 1) {
-      const nx = ((x / (offscreen.width - 1)) * 2 - 1) * 0.78;
-      const ny = ((y / (offscreen.height - 1)) * 2 - 1) * 0.78;
+      const nx = (x / (offscreen.width - 1)) * 2 - 1;
+      const ny = (y / (offscreen.height - 1)) * 2 - 1;
       const r = Math.sqrt(nx * nx + ny * ny);
       const idx = (y * offscreen.width + x) * 4;
 
-      if (r > 0.82) {
+      if (r > 0.98) {
         data[idx] = 0;
         data[idx + 1] = 0;
         data[idx + 2] = 0;
@@ -143,47 +137,37 @@ export function drawConsonancePlate(canvasId) {
       }
 
       let field = 0;
-      const angle = Math.atan2(ny, nx);
       notes.forEach((note, index) => {
         const ratio = note.freq / rootFrequency;
-        const interval = chord.intervals[index] || 0;
-        const ratioMode = Math.max(3, Math.round(ratio * 4 + (rootIndex % 3) + index));
-        const intervalMode = Math.max(4, ((interval + rootIndex + index) % 9) + 4);
-        const rotation = (rootIndex / NOTES.length) * Math.PI * 2 + index * 0.18;
-        const rx = nx * Math.cos(rotation) - ny * Math.sin(rotation);
-        const ry = nx * Math.sin(rotation) + ny * Math.cos(rotation);
-        const plate = Math.sin(ratioMode * Math.PI * rx) * Math.sin(intervalMode * Math.PI * ry);
-        const cross = Math.sin(intervalMode * Math.PI * rx) * Math.sin(ratioMode * Math.PI * ry);
-        const radial = Math.cos((ratioMode + intervalMode) * angle + chordSignature * 0.045)
-          * Math.cos((ratio * 7 + index + rootIndex * 0.2) * Math.PI * r);
-        const ring = Math.cos((8 + interval + index * 2) * Math.PI * r + ratio * Math.PI);
+        const harmonicSet = [1, 5 / 4, 4 / 3, 3 / 2, 5 / 3, 15 / 8];
+        const nearest = harmonicSet.reduce((best, value) => (
+          Math.abs(value - ratio) < Math.abs(best - ratio) ? value : best
+        ), harmonicSet[0]);
+        const harmonicCloseness = Math.max(1, Math.round(nearest * 4));
+        const rootShift = (NOTES.indexOf(state.root) % 3) + 1;
+        const m = harmonicCloseness + rootShift;
+        const nMode = Math.max(2, harmonicCloseness + index + 1);
+        const plate = Math.sin(m * Math.PI * nx) * Math.sin(nMode * Math.PI * ny)
+          - Math.sin(nMode * Math.PI * nx) * Math.sin(m * Math.PI * ny);
+        const radial = (state.base === 432 ? 0.1 : 0.18) * Math.cos((m + nMode) * Math.atan2(ny, nx));
 
-        field += (plate - cross * (stable ? 0.92 : 0.78)) * 0.58
-          + radial * (stable ? 0.34 : 0.26)
-          + ring * (stable ? 0.18 : 0.14);
+        field += plate + radial;
       });
 
       field /= notes.length;
 
-      const drift = stable
-        ? 0.025 * Math.cos(chordSignature * 0.06 + r * 10)
-        : 0.13 * Math.sin(rootFrequency * 0.00016 + nx * (7 + rootIndex % 5) + ny * 5 + angle * 2);
-      const symmetry = stable
-        ? 0.11 * Math.cos((rootIndex + notes.length + 5) * angle) * (1 - r / 0.82)
-        : 0.045 * Math.sin((rootIndex + notes.length + 7) * angle + r * 9);
-      const combined = field + symmetry + drift;
-      const nodeLine = Math.max(0, 1 - Math.abs(combined) / (stable ? 0.22 : 0.28));
-      const ringLine = Math.max(0, 1 - Math.abs(Math.sin((10 + notes.length * 2 + rootIndex % 4) * Math.PI * r + chordSignature * 0.08)) / 0.52);
-      const spokeLine = Math.max(0, 1 - Math.abs(Math.sin((rootIndex + 8 + notes.length) * angle + chordSignature * 0.04)) / (stable ? 0.4 : 0.52));
-      const glow = Math.pow(Math.max(nodeLine * 0.9, ringLine * 0.78, spokeLine * 0.5), stable ? 0.62 : 0.54);
-      const center = Math.max(0, 1 - r / 0.24);
-      const edgeFade = Math.max(0, 1 - r / 0.82);
-      const warm = stable ? 0 : Math.max(0, Math.sin(angle * 5 + r * 18 + chordSignature * 0.05)) * 0.16;
-      const ambient = edgeFade * (stable ? 7 : 10);
+      const instability = state.base === 440
+        ? 0.14 * (Math.sin(rootFrequency * 0.00022 + nx * 11 + ny * 9)
+          + 0.5 * Math.cos((nx * nx + ny * ny) * 22 + rootFrequency * 0.00008))
+        : 0;
+      const value = Math.abs(field * (state.base === 432 ? 0.92 : 1.18) + instability);
+      const line = Math.max(0, 1 - value / 0.12);
+      const glow = Math.pow(line, 0.45);
+      const stable = state.base === 432;
 
-      data[idx] = ambient + (stable ? glow * 95 + center * 42 : glow * 230 + warm * 80);
-      data[idx + 1] = ambient + (stable ? glow * 185 + center * 58 : glow * 118 + center * 36);
-      data[idx + 2] = ambient + (stable ? glow * 255 + edgeFade * 28 : glow * 88 + edgeFade * 20);
+      data[idx] = stable ? glow * 110 : glow * 220;
+      data[idx + 1] = stable ? glow * 180 : glow * 80;
+      data[idx + 2] = stable ? glow * 255 : glow * 140;
       data[idx + 3] = 255;
     }
   }
@@ -198,18 +182,9 @@ export function drawConsonancePlate(canvasId) {
   ctx.arc(width / 2, height / 2, Math.min(width, height) * 0.49, 0, Math.PI * 2);
   ctx.stroke();
 
-  const label = `${state.base} Hz - ${state.root} ${chord.label}`;
-  const mode = stable ? 'symmetric generative nodes' : 'drift + interference';
-  ctx.fillStyle = 'rgba(5, 8, 22, 0.58)';
-  ctx.fillRect(14, 14, Math.min(360, width - 28), 58);
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-  ctx.strokeRect(14, 14, Math.min(360, width - 28), 58);
   ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
-  ctx.font = '600 15px system-ui';
-  ctx.fillText(label, 28, 38);
-  ctx.fillStyle = stable ? 'rgba(125, 211, 252, 0.82)' : 'rgba(251, 113, 133, 0.82)';
-  ctx.font = '12px system-ui';
-  ctx.fillText(mode, 28, 58);
+  ctx.font = '15px system-ui';
+  ctx.fillText(state.base === 432 ? '432 Hz - symmetric nodes' : '440 Hz - increased drift', 18, 28);
 }
 
 export function getActiveChord() {

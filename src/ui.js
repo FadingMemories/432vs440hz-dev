@@ -180,6 +180,12 @@ function setActiveBase(base) {
   ['listen440Visual', 'listen440Plate'].forEach((id) => {
     $(id)?.classList.toggle('active', base === 440);
   });
+
+  document.querySelectorAll('[data-tuning-card]').forEach((card) => {
+    const cardBase = Number(card.dataset.tuningCard);
+    card.classList.toggle('is-muted', cardBase !== base);
+    card.classList.toggle('is-listening', cardBase === base);
+  });
 }
 
 function randomizeChord(actions) {
