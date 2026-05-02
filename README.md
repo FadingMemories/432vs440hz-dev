@@ -2,27 +2,31 @@
 
 Static, English-first educational web app for comparing 432 Hz and 440 Hz tuning references with chord playback, frequency data and canvas-based audio visualization.
 
+It also includes a separate Hemi Sync page for exploring stereo tone offsets, beat frequency, hemispheric synchronization concepts and generative wave patterns without overloading the main comparator interface.
+
 ## Project Structure
 
 ```text
 /
-├── index.html
-├── netlify.toml
-├── robots.txt
-├── sitemap.xml
-├── package.json
-├── README.md
-└── src/
-    ├── styles.css
-    ├── app.js
-    ├── state.js
-    ├── tuning.js
-    ├── chords.js
-    ├── audioEngine.js
-    ├── visualEngine.js
-    ├── ui.js
-    ├── i18n.js
-    └── seo.js
+|-- index.html
+|-- hemi-sync.html
+|-- netlify.toml
+|-- robots.txt
+|-- sitemap.xml
+|-- package.json
+|-- README.md
+`-- src/
+    |-- styles.css
+    |-- app.js
+    |-- state.js
+    |-- tuning.js
+    |-- chords.js
+    |-- audioEngine.js
+    |-- visualEngine.js
+    |-- ui.js
+    |-- i18n.js
+    |-- hemispheres.js
+    `-- seo.js
 ```
 
 ## Run Locally
@@ -37,6 +41,13 @@ Then open:
 
 ```text
 http://localhost:8888
+```
+
+Available pages:
+
+```text
+http://localhost:8888/
+http://localhost:8888/hemi-sync.html
 ```
 
 You can also open `index.html` directly in a browser, but a local static server is recommended for ES modules.
@@ -71,4 +82,4 @@ This runs basic JavaScript syntax validation across the app modules.
 - Secondary language: Spanish via `src/i18n.js`.
 - Audio: Web Audio API.
 - Visuals: Canvas 2D generative models.
-- The visualizations are educational and comparative, not physical measurements or therapeutic claims.
+- Hemi Sync is presented as an educational stereo-beat visualization concept, not as a medical or therapeutic claim.

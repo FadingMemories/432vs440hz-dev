@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');const root=process.cwd();const types={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8','.ico':'image/x-icon','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml'};http.createServer((req,res)=>{const url=new URL(req.url,'http://localhost');let file=path.join(root,decodeURIComponent(url.pathname));if(!file.startsWith(root)){res.writeHead(403);res.end('Forbidden');return;}if(url.pathname==='/'||!path.extname(file))file=path.join(root,'index.html');fs.readFile(file,(err,data)=>{if(err){res.writeHead(404);res.end('Not found');return;}res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream'});res.end(data);});}).listen(8888,()=>console.log('Local server: http://127.0.0.1:8888'));\"",
-    "check": "node --check src/app.js && node --check src/state.js && node --check src/tuning.js && node --check src/chords.js && node --check src/audioEngine.js && node --check src/visualEngine.js && node --check src/ui.js && node --check src/i18n.js && node --check src/seo.js"
+    "check": "node --check src/app.js && node --check src/state.js && node --check src/tuning.js && node --check src/chords.js && node --check src/audioEngine.js && node --check src/visualEngine.js && node --check src/ui.js && node --check src/i18n.js && node --check src/seo.js && node --check src/hemispheres.js"
   },
   "keywords": [
     "432hz",

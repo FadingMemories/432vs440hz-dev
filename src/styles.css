@@ -122,6 +122,12 @@ canvas.tall {
   display: none;
 }
 
+.page-header {
+  display: grid;
+  gap: 1rem;
+  padding: calc(1.2rem + env(safe-area-inset-top)) 0.85rem 0.75rem;
+}
+
 .top-dock {
   position: sticky;
   top: 0;
@@ -449,6 +455,158 @@ canvas.tall {
   max-width: 72rem;
 }
 
+.page-header h1 {
+  max-width: 16ch;
+}
+
+.tool-nav {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.tool-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.tool-nav a:hover,
+.tool-nav a.active {
+  color: var(--text);
+  border-color: rgba(52, 211, 153, 0.55);
+  background: rgba(52, 211, 153, 0.12);
+}
+
+.tool-nav.compact {
+  margin-top: 0;
+  justify-content: flex-end;
+}
+
+.hemi-app {
+  display: grid;
+  gap: 0.85rem;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 0.65rem calc(1.2rem + env(safe-area-inset-bottom));
+}
+
+.hemi-band-grid,
+.hemi-topbar,
+.hemi-readout,
+.hemi-layout,
+.hemi-settings,
+.patterns {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hemi-band-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.band-btn,
+.preset-chip {
+  display: grid;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.band-btn {
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  background: rgba(15, 23, 42, 0.66);
+}
+
+.band-btn strong,
+.preset-chip strong {
+  color: var(--text);
+}
+
+.band-btn span,
+.preset-chip small,
+.hint {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.42;
+}
+
+.hemi-current,
+.hemi-controls,
+.hemi-panel {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.preset-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+
+.preset-chip {
+  width: auto;
+  max-width: 18rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius);
+}
+
+.hemi-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-readout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-panel-header {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.visual-menu {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.visual-btn,
+.mini-btn {
+  width: auto;
+  min-height: 2.25rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.visual-panel {
+  display: none;
+}
+
+.visual-panel.active {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.wave-canvas,
+.main-canvas {
+  height: 320px;
+}
+
+.toggle-btn.paused {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
 @media (max-width: 720px) {
   .sidebar .section > h2,
   .sidebar label:first-of-type,
@@ -563,6 +721,48 @@ canvas.tall {
 
   .faq {
     display: block;
+  }
+
+  .hemi-app {
+    padding: 0.75rem clamp(1.5rem, 4vw, 3rem) 2.5rem;
+  }
+
+  .hemi-band-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .hemi-topbar {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+
+  .hemi-readout {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .hemi-layout {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .hemi-settings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wave-settings {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .wave-canvas {
+    height: 340px;
+  }
+
+  .main-canvas {
+    height: 460px;
+  }
+
+  .patterns {
+    grid-template-columns: 1fr 1fr;
   }
 }
 

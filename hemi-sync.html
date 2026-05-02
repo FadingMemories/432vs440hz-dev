@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hemi Sync | Stereo Beat & Hemispheric Synchronization Visualizer</title>
+  <meta name="description" content="Explore the Hemi Sync technique with two stereo tones, beat frequency and real-time wave visualizations. Educational, neutral and non-clinical.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="theme-color" content="#050816">
+  <link rel="canonical" href="https://432vs440hz.com/hemi-sync.html">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hemi Sync">
+  <meta property="og:description" content="A neutral educational tool for exploring stereo beat frequency, hemispheric synchronization concepts and generative wave patterns.">
+  <meta property="og:url" content="https://432vs440hz.com/hemi-sync.html">
+  <meta property="og:image" content="https://432vs440hz.com/preview.jpg">
+  <meta property="og:image:alt" content="Hemi Sync interface with stereo wave and geometric pattern canvases">
+  <meta property="og:site_name" content="432 vs 440 Hz Comparator">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hemi Sync">
+  <meta name="twitter:description" content="Explore stereo beat frequency and hemispheric synchronization concepts through educational wave visualizations.">
+  <meta name="twitter:image" content="https://432vs440hz.com/preview.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Hemi Sync",
+    "url": "https://432vs440hz.com/hemi-sync.html",
+    "description": "Educational Hemi Sync visualizer for stereo tone offsets, beat frequency and hemispheric synchronization concepts, with wave, Lissajous, mandala and geometric pattern views.",
+    "applicationCategory": "MusicApplication",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "browserRequirements": "Requires a modern browser with Web Audio API and Canvas support.",
+    "inLanguage": "en"
+  }
+  </script>
+
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <header class="site-header page-header">
+    <div>
+      <p class="eyebrow">Stereo beat synchronization</p>
+      <h1>Hemi Sync</h1>
+      <p class="intro">
+        Explore the Hemi Sync technique through two stereo tones, the perceived beat created by their difference,
+        and visual models of phase relationship and hemispheric synchronization. This is an educational audio
+        visualization tool, not a medical or therapeutic device.
+      </p>
+      <nav class="tool-nav" aria-label="Tools">
+        <a href="index.html">432 / 440 Comparator</a>
+        <a class="active" href="hemi-sync.html">Hemi Sync</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hemi-app">
+    <section class="hemi-band-grid" id="bandButtons" aria-label="Beat frequency bands">
+      <button class="band-btn" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz offset</span></button>
+      <button class="band-btn active" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz offset</span></button>
+    </section>
+
+    <section class="hemi-topbar">
+      <article class="card hemi-current">
+        <div>
+          <h2 id="bandTitle">Theta offset</h2>
+          <p id="bandDescription">A medium stereo offset for exploring slow beat movement and synchronization concepts.</p>
+          <div class="preset-row" id="presetChips"></div>
+        </div>
+      </article>
+
+      <article class="card hemi-controls" aria-label="Audio controls">
+        <label>Channel A frequency
+          <input id="fA" type="number" min="20" max="1500" step="1" value="120">
+        </label>
+        <label>Channel B frequency
+          <input id="fB" type="number" min="20" max="1500" step="1" value="124">
+        </label>
+        <button class="primary" type="button" id="audioBtn">Start Audio</button>
+        <button class="ghost" type="button" id="pauseVisualBtn">Pause Visuals</button>
+        <button class="ghost toggle-btn" type="button" id="muteA">Mute Channel A</button>
+        <button class="ghost toggle-btn" type="button" id="muteB">Mute Channel B</button>
+      </article>
+    </section>
+
+    <section class="hemi-readout" aria-label="Current stereo tone data">
+      <article class="card"><div class="metric"><span id="beat">4.00</span> <small>Hz</small></div><p>Beat frequency</p></article>
+      <article class="card"><div class="metric"><span id="carrier">122.00</span> <small>Hz</small></div><p>Mean tone</p></article>
+      <article class="card"><div class="metric"><span id="ratio">30:31</span></div><p>Tone ratio</p></article>
+      <article class="card"><div class="metric"><span id="state">Theta</span></div><p>Detected band</p></article>
+    </section>
+
+    <section class="hemi-layout">
+      <article class="card hemi-panel">
+        <h2>Wave Movement</h2>
+        <canvas id="waves" class="wave-canvas" width="1100" height="520" role="img" aria-label="Stereo wave movement visualization"></canvas>
+        <div class="hemi-settings wave-settings">
+          <label>Visual time scale
+            <input id="waveSpeed" type="range" min="0.25" max="4" step="0.05" value="1">
+          </label>
+          <button class="ghost mini-btn" type="button" id="resetWaveSpeed">Reset 1.0</button>
+          <label>Wave and beat amplitude
+            <input id="waveAmp" type="range" min="0.2" max="1" step="0.01" value="0.8">
+          </label>
+        </div>
+        <p class="hint">The wave panel shows both channels and their combined movement. It is a visual guide, not a measurement instrument.</p>
+
+        <h2>Beat Envelope</h2>
+        <canvas id="beatWave" class="wave-canvas" width="1100" height="520" role="img" aria-label="Beat envelope visualization"></canvas>
+        <p class="hint">The envelope shows the slower pulse created by the difference between the two tones.</p>
+      </article>
+
+      <article class="card hemi-panel">
+        <div class="hemi-panel-header">
+          <h2>Complementary Visualization</h2>
+          <nav class="visual-menu" id="visualMenu" aria-label="Visualization views">
+            <button class="visual-btn active" type="button" data-view="syncView">Hemi Sync</button>
+            <button class="visual-btn" type="button" data-view="mandalaView">Mandala</button>
+            <button class="visual-btn" type="button" data-view="patternsView">Patterns A/B</button>
+          </nav>
+        </div>
+        <p class="hint">Switch between stereo phase synchronization, harmonic mandala and separate geometric patterns for each channel.</p>
+
+        <section id="syncView" class="visual-panel active">
+          <canvas id="lissajous" class="main-canvas" width="1100" height="520" role="img" aria-label="Lissajous synchronization figure"></canvas>
+          <div class="hemi-settings">
+            <label>Figure scale
+              <input id="syncScale" type="range" min="0.15" max="0.45" step="0.01" value="0.32">
+            </label>
+          </div>
+        </section>
+
+        <section id="mandalaView" class="visual-panel">
+          <canvas id="mandala" class="main-canvas" width="1100" height="520" role="img" aria-label="Generative mandala based on stereo tone offset"></canvas>
+          <div class="hemi-settings">
+            <label>Mandala layers
+              <input id="mandalaLayers" type="range" min="8" max="40" step="1" value="24">
+            </label>
+            <label>Radial intensity
+              <input id="mandalaIntensity" type="range" min="0.05" max="0.45" step="0.01" value="0.22">
+            </label>
+            <label>Mandala zoom
+              <input id="mandalaZoom" type="range" min="0.5" max="3" step="0.05" value="1">
+            </label>
+          </div>
+        </section>
+
+        <section id="patternsView" class="visual-panel">
+          <div class="patterns">
+            <canvas id="plateA" width="520" height="520" role="img" aria-label="Channel A geometric pattern"></canvas>
+            <canvas id="plateB" width="520" height="520" role="img" aria-label="Channel B geometric pattern"></canvas>
+          </div>
+          <div class="hemi-settings">
+            <label>Line clarity
+              <input id="lineThickness" type="range" min="0.018" max="0.12" value="0.055" step="0.001">
+            </label>
+            <label>Geometric detail
+              <input id="detail" type="range" min="4" max="22" value="12" step="1">
+            </label>
+          </div>
+        </section>
+      </article>
+    </section>
+
+    <section class="card seo-content">
+      <h2>About Hemi Sync</h2>
+      <article>
+        <h3>What this tool shows</h3>
+        <p>Hemi Sync uses slightly different tones in the left and right channels to create a perceived beat frequency. This page visualizes that relationship as wave motion, stereo phase geometry and generative patterns.</p>
+      </article>
+      <article>
+        <h3>How to use it</h3>
+        <p>Select a band preset or enter two frequencies manually. Use headphones at a comfortable volume if you want to hear stereo separation. The visualizations are educational and do not claim guaranteed cognitive, medical or therapeutic effects.</p>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="src/hemispheres.js"></script>
+</body>
+</html>
