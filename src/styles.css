@@ -296,6 +296,10 @@ canvas.tall {
   gap: 0.75rem;
 }
 
+.single-visual {
+  grid-template-columns: 1fr;
+}
+
 .visuals:first-of-type {
   order: -2;
 }
@@ -478,6 +482,25 @@ canvas.tall {
 
 .faq {
   display: none;
+}
+
+.info-hub {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.info-card {
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+}
+
+.comparator-info-hub .table {
+  overflow-x: auto;
+}
+
+.comparator-info-hub .seo-content {
+  gap: 0.75rem;
 }
 
 .seo-content {
@@ -889,7 +912,7 @@ canvas.tall {
   }
 
   .hemi-shell {
-    grid-template-columns: minmax(280px, 25%) minmax(0, 1fr);
+    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
     gap: 1rem;
   }
 
@@ -957,6 +980,10 @@ canvas.tall {
     gap: 1rem;
   }
 
+  .single-visual {
+    grid-template-columns: 1fr;
+  }
+
   .hemi-visuals {
     grid-template-columns: 1fr;
   }
@@ -991,6 +1018,26 @@ canvas.tall {
 
   .faq {
     display: block;
+  }
+
+  .info-hub {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .info-card-wide {
+    grid-column: 1 / -1;
+  }
+
+  .comparator-info-hub {
+    align-items: stretch;
+  }
+
+  .comparator-info-hub .info-card {
+    min-height: 100%;
+  }
+
+  .comparator-info-hub .seo-content article {
+    padding-top: 0.65rem;
   }
 
   .hemi-app {

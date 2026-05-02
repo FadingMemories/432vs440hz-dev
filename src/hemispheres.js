@@ -114,6 +114,10 @@ function currentValues() {
   return { fA, fB, rawA, rawB, beat, carrier };
 }
 
+function renderStillWave() {
+  drawWavePanel(0, currentValues());
+}
+
 function renderPresetChips(bandKey) {
   const band = bands[bandKey];
   const row = $('presetChips');
@@ -134,7 +138,7 @@ function renderPresetChips(bandKey) {
       chip.classList.add('active');
       $('fA').value = preset[0];
       $('fB').value = preset[1];
-      currentValues();
+      renderStillWave();
     });
     row.appendChild(chip);
   });
@@ -152,7 +156,7 @@ function renderBand(bandKey) {
   $('fA').value = band.presets[0][0];
   $('fB').value = band.presets[0][1];
   renderPresetChips(bandKey);
-  currentValues();
+  renderStillWave();
 }
 
 function clearWave(context) {
@@ -215,7 +219,7 @@ function drawWavePanel(time, values) {
 }
 
 function loop(time) {
-  if (!running) return;
+  if (!audioOn || !running) return;
   const values = currentValues();
   drawWavePanel((time - startTime) / 1000, values);
   requestAnimationFrame(loop);
@@ -243,7 +247,11 @@ async function startAudio() {
   oscA.start();
   oscB.start();
   audioOn = true;
+  running = true;
+  startTime = performance.now();
   $('audioBtn').textContent = 'Stop Audio';
+  $('pauseVisualBtn').textContent = 'Pause Visuals';
+  requestAnimationFrame(loop);
 }
 
 async function stopAudio() {
@@ -258,6 +266,7 @@ async function stopAudio() {
   gainA = null;
   gainB = null;
   $('audioBtn').textContent = 'Start Audio';
+  renderStillWave();
 }
 
 async function toggleAudio() {
@@ -275,13 +284,13 @@ function toggleMute(channel) {
     $('muteB').classList.toggle('active', channelBMuted);
     if (audioOn) gainB.gain.value = channelBMuted ? 0 : 0.1;
   }
-  currentValues();
+  renderStillWave();
 }
 
 function pauseVisuals() {
   running = !running;
   $('pauseVisualBtn').textContent = running ? 'Pause Visuals' : 'Resume Visuals';
-  if (running) requestAnimationFrame(loop);
+  if (running && audioOn) requestAnimationFrame(loop);
 }
 
 function resetWaveSpeed() {
@@ -294,14 +303,14 @@ function bindEvents() {
   $('muteA').addEventListener('click', () => toggleMute('A'));
   $('muteB').addEventListener('click', () => toggleMute('B'));
 
-  $('fA').addEventListener('input', currentValues);
-  $('fB').addEventListener('input', currentValues);
+  $('fA').addEventListener('input', renderStillWave);
+  $('fB').addEventListener('input', renderStillWave);
 
-  $('waveSpeed').addEventListener('input', currentValues);
-  $('waveAmp').addEventListener('input', currentValues);
+  $('waveSpeed').addEventListener('input', renderStillWave);
+  $('waveAmp').addEventListener('input', renderStillWave);
   $('resetWaveSpeed').addEventListener('click', () => {
     resetWaveSpeed();
-    currentValues();
+    renderStillWave();
   });
 
   document.querySelectorAll('.band-btn').forEach((button) => {
@@ -315,13 +324,13 @@ function bindEvents() {
   if ($('mobileFAInput')) {
     $('mobileFAInput').addEventListener('input', (event) => {
       $('fA').value = event.target.value;
-      currentValues();
+      renderStillWave();
     });
   }
   if ($('mobileFBInput')) {
     $('mobileFBInput').addEventListener('input', (event) => {
       $('fB').value = event.target.value;
-      currentValues();
+      renderStillWave();
     });
   }
 }
@@ -330,5 +339,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initI18n();
   bindEvents();
   renderBand(activeBand);
-  requestAnimationFrame(loop);
+  renderStillWave();
 });
