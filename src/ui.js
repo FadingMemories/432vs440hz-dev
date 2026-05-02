@@ -18,18 +18,22 @@ export function initUI(actions) {
 function populateRootSelects(actions) {
   NOTES.forEach((note) => {
     ['rootSelect', 'mobileRootSelect'].forEach((id) => {
+      const select = $(id);
+      if (!select) return;
       const option = document.createElement('option');
       option.value = note;
       option.textContent = note;
-      $(id)?.appendChild(option);
+      select.appendChild(option);
     });
   });
 
-  $('rootSelect').value = state.root;
-  $('mobileRootSelect').value = state.root;
+  if ($('rootSelect')) $('rootSelect').value = state.root;
+  if ($('mobileRootSelect')) $('mobileRootSelect').value = state.root;
 
   ['rootSelect', 'mobileRootSelect'].forEach((id) => {
-    $(id).addEventListener('change', (event) => {
+    const select = $(id);
+    if (!select) return;
+    select.addEventListener('change', (event) => {
       setState({ root: event.target.value });
       markNodalDirty();
       syncControls();
@@ -45,7 +49,7 @@ function populateChordControls(actions) {
     const option = document.createElement('option');
     option.value = key;
     option.textContent = chord.label;
-    $('mobileChordSelect').appendChild(option);
+    $('mobileChordSelect')?.appendChild(option);
 
     const button = document.createElement('button');
     button.type = 'button';
@@ -62,8 +66,8 @@ function populateChordControls(actions) {
     $('chordButtons').appendChild(button);
   });
 
-  $('mobileChordSelect').value = state.chord;
-  $('mobileChordSelect').addEventListener('change', (event) => {
+  if ($('mobileChordSelect')) $('mobileChordSelect').value = state.chord;
+  $('mobileChordSelect')?.addEventListener('change', (event) => {
     setState({ chord: event.target.value });
     markNodalDirty();
     syncControls();
@@ -119,9 +123,9 @@ export function getPlaybackSettings() {
 }
 
 export function syncControls() {
-  $('rootSelect').value = state.root;
-  $('mobileRootSelect').value = state.root;
-  $('mobileChordSelect').value = state.chord;
+  if ($('rootSelect')) $('rootSelect').value = state.root;
+  if ($('mobileRootSelect')) $('mobileRootSelect').value = state.root;
+  if ($('mobileChordSelect')) $('mobileChordSelect').value = state.chord;
 
   document.querySelectorAll('.chord-btn').forEach((button) => {
     button.classList.toggle('active', button.dataset.chord === state.chord);
@@ -134,7 +138,9 @@ export function updateUI() {
   const notes440 = getNotes('equal', 440, state.root, state.chord);
   const cents = getCentsDeviation(notes432[0].freq, notes440[0].freq);
 
-  $('chordName').textContent = `${state.root} ${chord.label}`;
+  const activeChordLabel = `${state.root} ${chord.label}`;
+  $('chordName').textContent = activeChordLabel;
+  if ($('mobileNowPlaying')) $('mobileNowPlaying').textContent = activeChordLabel;
   $('baseReadout').textContent = state.base;
   $('systemReadout').textContent = state.tuning === 'equal' ? 'Equal' : state.tuning;
   $('spreadReadout').textContent = `+${formatNumber(cents, 1)} cents`;

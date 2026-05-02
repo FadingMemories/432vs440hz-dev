@@ -128,6 +128,7 @@ function renderBand(bandKey) {
   });
 
   $('bandTitle').textContent = band.title;
+  if ($('mobileHemiNow')) $('mobileHemiNow').textContent = band.title;
   $('bandDescription').textContent = band.desc;
   $('presetChips').innerHTML = '';
 
@@ -451,10 +452,14 @@ function bindEvents() {
   $('resetWaveSpeed').addEventListener('click', () => {
     $('waveSpeed').value = 1;
   });
-  $('pauseVisualBtn').addEventListener('click', () => {
+  const toggleVisuals = () => {
     running = !running;
-    $('pauseVisualBtn').textContent = running ? 'Pause Visuals' : 'Resume Visuals';
-  });
+    const label = running ? 'Pause Visuals' : 'Resume Visuals';
+    $('pauseVisualBtn').textContent = label;
+    if ($('mobilePauseVisualBtn')) $('mobilePauseVisualBtn').textContent = label;
+  };
+  $('pauseVisualBtn').addEventListener('click', toggleVisuals);
+  $('mobilePauseVisualBtn')?.addEventListener('click', toggleVisuals);
   $('muteA').addEventListener('click', () => {
     channelAMuted = !channelAMuted;
     if (gainA) gainA.gain.value = channelAMuted ? 0.00001 : 0.035;
@@ -473,6 +478,7 @@ function bindEvents() {
   });
   ['lineThickness', 'detail'].forEach((id) => $(id).addEventListener('input', markPatternsDirty));
   $('audioBtn').addEventListener('click', toggleAudio);
+  $('mobileAudioBtn')?.addEventListener('click', toggleAudio);
 }
 
 async function toggleAudio() {
@@ -497,6 +503,7 @@ async function toggleAudio() {
     oscB.start();
     audioOn = true;
     $('audioBtn').textContent = 'Stop Audio';
+    if ($('mobileAudioBtn')) $('mobileAudioBtn').textContent = 'Stop Audio';
   } else {
     oscA.stop();
     oscB.stop();
@@ -508,6 +515,7 @@ async function toggleAudio() {
     gainA = null;
     gainB = null;
     $('audioBtn').textContent = 'Start Audio';
+    if ($('mobileAudioBtn')) $('mobileAudioBtn').textContent = 'Start Audio';
   }
 }
 
