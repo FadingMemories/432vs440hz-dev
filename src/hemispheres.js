@@ -15,45 +15,45 @@ const bands = {
     title: 'Delta - deep rest',
     desc: 'Very slow offsets for deep relaxation and rest-oriented exploration.',
     presets: [
-      [120, 122, 'Rest 2 Hz', 'Very low offset around 120 Hz for deep resting beats.'],
-      [120, 123, 'Soft Delta 3 Hz', 'Gentle deep rest with a slightly higher offset.'],
-      [120, 123.5, 'Recovery 3.5 Hz', 'Near the delta/theta boundary for sustained calm.'],
+      [100, 102, 'Low Rest 2 Hz', 'Low carrier with a very slow delta offset.'],
+      [120, 123, 'Soft Delta 3 Hz', 'Mid carrier for gentle deep-rest exploration.'],
+      [150, 153, 'Deep Recovery 3 Hz', 'Higher carrier with a stable slow delta pulse.'],
     ],
   },
   theta: {
     title: 'Theta - meditation',
     desc: 'Medium-slow offsets for meditation, creativity and internal visualization.',
     presets: [
-      [120, 124, 'Meditation 4 Hz', 'Lower theta offset with a comfortable 120 Hz carrier.'],
-      [120, 127, 'Gateway 7 Hz', 'Higher theta offset for clearer slow pulses.'],
-      [120, 126, 'Visualization 6 Hz', 'Balanced theta for creative, focused imagery.'],
+      [100, 104, 'Low Theta 4 Hz', 'Low carrier with a soft theta offset.'],
+      [120, 127, 'Gateway 7 Hz', 'Mid carrier with clearer slow pulses.'],
+      [150, 156, 'Visualization 6 Hz', 'Higher carrier for a brighter theta comparison.'],
     ],
   },
   alpha: {
     title: 'Alpha - relaxation',
     desc: 'Calm waking offsets for relaxed focus and gentle mental clarity.',
     presets: [
-      [120, 128, 'Soft Alpha 8 Hz', 'Relaxed alpha with a stable low carrier.'],
-      [120, 130, 'Calm 10 Hz', 'Classic alpha range for quiet alertness.'],
-      [120, 132, 'Bright Alpha 12 Hz', 'Clear alpha with a more active beat.'],
+      [100, 108, 'Soft Alpha 8 Hz', 'Low carrier with a relaxed alpha beat.'],
+      [120, 130, 'Calm 10 Hz', 'Mid carrier for quiet alertness.'],
+      [150, 162, 'Bright Alpha 12 Hz', 'Higher carrier with a clearer active beat.'],
     ],
   },
   beta: {
     title: 'Beta - focus',
     desc: 'More active offsets for attention, productivity and mental alertness.',
     presets: [
-      [120, 136, 'Focus 16 Hz', 'Moderate beta for sustained concentration.'],
-      [120, 138, 'Work 18 Hz', 'Active beta for intense cognitive tasks.'],
-      [120, 146, 'Alert 26 Hz', 'Higher beta for vigilance and energy.'],
+      [100, 116, 'Focus 16 Hz', 'Low carrier with a moderate beta offset.'],
+      [120, 138, 'Work 18 Hz', 'Mid carrier for active comparison.'],
+      [150, 176, 'Alert 26 Hz', 'Higher carrier with a stronger beta offset.'],
     ],
   },
   gamma: {
     title: 'Gamma - alertness',
     desc: 'High-frequency offsets for intense or experimental stimulation.',
     presets: [
-      [120, 160, 'Gamma 40 Hz', 'Low carrier gamma for a clearer beat.'],
-      [200, 240, 'High Gamma 40 Hz', 'Same beat with higher carrier frequencies.'],
-      [432, 440, '432 vs 440 - 8 Hz', 'Musical comparison between alternate and modern tuning references.'],
+      [100, 140, 'Low Gamma 40 Hz', 'Low carrier gamma for a clear fast beat.'],
+      [120, 160, 'Gamma 40 Hz', 'Mid carrier with the same fast offset.'],
+      [150, 190, 'High Gamma 40 Hz', 'Higher carrier for a brighter gamma comparison.'],
     ],
   },
 };
@@ -73,6 +73,20 @@ let startTime = performance.now();
 
 function numberValue(id) {
   return parseFloat($(id).value);
+}
+
+function masterVolume() {
+  return Math.max(0, parseFloat($('masterVolume')?.value) || 0);
+}
+
+function channelGain(isMuted) {
+  return isMuted ? 0 : masterVolume();
+}
+
+function updateGains() {
+  if (!audioOn) return;
+  gainA.gain.value = channelGain(channelAMuted);
+  gainB.gain.value = channelGain(channelBMuted);
 }
 
 function gcd(a, b) {
@@ -238,8 +252,8 @@ async function startAudio() {
   oscB.type = 'sine';
   oscA.frequency.value = parseFloat($('fA').value);
   oscB.frequency.value = parseFloat($('fB').value);
-  gainA.gain.value = channelAMuted ? 0 : 0.1;
-  gainB.gain.value = channelBMuted ? 0 : 0.1;
+  gainA.gain.value = channelGain(channelAMuted);
+  gainB.gain.value = channelGain(channelBMuted);
 
   oscA.connect(gainA).connect(merger, 0, 0);
   oscB.connect(gainB).connect(merger, 0, 1);
@@ -278,12 +292,11 @@ function toggleMute(channel) {
   if (channel === 'A') {
     channelAMuted = !channelAMuted;
     $('muteA').classList.toggle('active', channelAMuted);
-    if (audioOn) gainA.gain.value = channelAMuted ? 0 : 0.1;
   } else {
     channelBMuted = !channelBMuted;
     $('muteB').classList.toggle('active', channelBMuted);
-    if (audioOn) gainB.gain.value = channelBMuted ? 0 : 0.1;
   }
+  updateGains();
   renderStillWave();
 }
 
@@ -305,6 +318,7 @@ function bindEvents() {
 
   $('fA').addEventListener('input', renderStillWave);
   $('fB').addEventListener('input', renderStillWave);
+  $('masterVolume').addEventListener('input', updateGains);
 
   $('waveSpeed').addEventListener('input', renderStillWave);
   $('waveAmp').addEventListener('input', renderStillWave);

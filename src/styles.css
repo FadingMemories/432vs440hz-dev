@@ -296,10 +296,6 @@ canvas.tall {
   gap: 0.75rem;
 }
 
-.single-visual {
-  grid-template-columns: 1fr;
-}
-
 .visuals:first-of-type {
   order: -2;
 }
@@ -461,10 +457,14 @@ canvas.tall {
   gap: 0.6rem;
 }
 
-.mobile-page-intro h1 {
+.mobile-page-intro h1,
+.mobile-title {
+  display: block;
   max-width: 100%;
   font-size: clamp(1.45rem, 7vw, 2rem);
+  font-weight: 900;
   line-height: 1.05;
+  color: var(--text);
 }
 
 .mobile-page-intro .eyebrow {
@@ -978,10 +978,6 @@ canvas.tall {
   .visuals {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
-  }
-
-  .single-visual {
-    grid-template-columns: 1fr;
   }
 
   .hemi-visuals {

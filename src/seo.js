@@ -7,6 +7,6 @@ export function initSeo() {
   });
 
   document.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"]').forEach((meta) => {
-    meta.content = 'https://432vs440hz.com/preview.jpg';
+    meta.content = 'https://432vs440hz.com/preview.png';
   });
 }

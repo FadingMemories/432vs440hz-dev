@@ -1,10 +1,10 @@
 const translations = {
   en: {
-    pageTitle: '432 vs 440 Hz Comparator | Free Tuning & Frequency Visualizer',
-    pageDescription: 'Use the 432 vs 440 Hz Comparator to compare A4 tuning references with chord playback, frequency tables and cymatics-inspired generative visuals.',
+    pageTitle: '432 vs 440 Hz Comparator | Compare Tuning, Chords & Frequencies',
+    pageDescription: 'Free 432 vs 440 Hz Comparator for comparing A4 tuning references with chord playback, frequency tables and neutral educational audio visualizations.',
     eyebrow: 'Educational audio comparator',
     appTitle: '432 vs 440 Hz Comparator',
-    appSubtitle: 'Compare 432 Hz and 440 Hz tuning in real time through chord playback, frequency data, harmonic geometry and cymatic-inspired visual models.',
+    appSubtitle: 'Compare 432 Hz and 440 Hz tuning in real time through chord playback, frequency data, harmonic geometry and cymatics-inspired visual models.',
     languageEN: 'EN',
     languageES: 'ES',
     sectionChord: '1. Chord',
@@ -47,12 +47,14 @@ const translations = {
     notesAndProportions: 'Notes and Proportions',
     notesDesc: 'Check frequencies, tuning differences and natural-ratio deviation for each chord tone.',
     faqTitle: 'FAQ',
-    faqQuestion1: 'Does 432 Hz scientifically guarantee better effects?',
-    faqAnswer1: 'No. The comparator is for harmonic exploration, listening practice and creative experimentation.',
+    faqQuestion1: 'Does 432 Hz sound different from 440 Hz?',
+    faqAnswer1: 'Yes. A4 = 432 Hz is lower than A4 = 440 Hz by about 31.8 cents. The difference is musical and measurable, not a guaranteed health or emotional effect.',
     faqQuestion2: 'What is 432 vs 440 Hz?',
     faqAnswer2: '432 Hz and 440 Hz are two A4 tuning references. This tool compares how chords shift when the reference changes.',
     faqQuestion3: 'How do I use this comparator?',
     faqAnswer3: 'Choose a root note and chord type, then play and compare the two tuning references.',
+    faqQuestion4: 'Is the cymatics-inspired pattern a physical simulation?',
+    faqAnswer4: 'No. It is a generative nodal model for educational comparison, not a measurement of a real plate or acoustic experiment.',
     seoMainTitle: '432 vs 440 Hz Comparator Guide',
     seoWhatTitle: 'What is the 432 vs 440 Hz Comparator?',
     seoWhatText: 'The 432 vs 440 Hz Comparator is an educational audio tool for comparing two A4 tuning references. It lets you hear the same chord at A4 = 432 Hz and A4 = 440 Hz, review the resulting note frequencies, and study how interval relationships can be represented visually.',
@@ -70,8 +72,8 @@ const translations = {
     seoFaqText: 'Use this tool to explore tuning differences, train your ear and inspect chord frequencies. It is designed for musicians, producers, students and curious listeners who want a neutral 432 vs 440 Hz Comparator without exaggerated claims.',
   },
   es: {
-    pageTitle: '432 vs 440 Hz Comparator | Visualizador gratuito de afinacion y frecuencia',
-    pageDescription: 'Usa 432 vs 440 Hz Comparator para comparar referencias A4 con acordes, tablas de frecuencia y visuales generativos inspirados en cimatica.',
+    pageTitle: '432 vs 440 Hz Comparator | Comparar afinacion, acordes y frecuencias',
+    pageDescription: '432 vs 440 Hz Comparator gratuito para comparar referencias A4 con acordes, tablas de frecuencia y visualizaciones educativas neutrales.',
     eyebrow: 'Comparador educativo de audio',
     appTitle: '432 vs 440 Hz Comparator',
     appSubtitle: 'Compara 432 Hz y 440 Hz en tiempo real mediante acordes, datos de frecuencia, geometria armonica y modelos visuales inspirados en cimatica.',
@@ -117,12 +119,14 @@ const translations = {
     notesAndProportions: 'Notas y proporciones',
     notesDesc: 'Consulta frecuencias, diferencias de afinacion y desviacion respecto a proporciones naturales.',
     faqTitle: 'Preguntas frecuentes',
-    faqQuestion1: '432 Hz garantiza cientificamente mejores efectos?',
-    faqAnswer1: 'No. El comparador sirve para exploracion armonica, escucha y experimentacion creativa.',
+    faqQuestion1: 'Suena diferente 432 Hz de 440 Hz?',
+    faqAnswer1: 'Si. A4 = 432 Hz es mas bajo que A4 = 440 Hz por unos 31.8 cents. La diferencia es musical y medible, no un efecto de salud o emocional garantizado.',
     faqQuestion2: 'Que es 432 vs 440 Hz?',
     faqAnswer2: '432 Hz y 440 Hz son dos referencias de afinacion para A4. Esta herramienta compara como cambian los acordes al modificar la referencia.',
     faqQuestion3: 'Como uso este comparador?',
     faqAnswer3: 'Elige una nota raiz y un tipo de acorde. Despues reproduce y compara las dos referencias de afinacion.',
+    faqQuestion4: 'El patron inspirado en cimatica es una simulacion fisica?',
+    faqAnswer4: 'No. Es un modelo nodal generativo para comparacion educativa, no una medicion de una placa real ni de un experimento acustico.',
     seoMainTitle: 'Guia de 432 vs 440 Hz Comparator',
     seoWhatTitle: 'Que es 432 vs 440 Hz Comparator?',
     seoWhatText: '432 vs 440 Hz Comparator es una herramienta educativa de audio para comparar dos referencias de afinacion A4. Permite escuchar el mismo acorde con A4 = 432 Hz y A4 = 440 Hz, revisar las frecuencias resultantes y observar como las relaciones intervalicas pueden representarse visualmente.',
@@ -159,12 +163,16 @@ export function setLanguage(language) {
 }
 
 export function applyTranslations() {
-  document.title = t('pageTitle');
-  document.querySelector('meta[name="description"]')?.setAttribute('content', t('pageDescription'));
-  document.querySelector('meta[property="og:title"]')?.setAttribute('content', t('pageTitle'));
-  document.querySelector('meta[property="og:description"]')?.setAttribute('content', t('pageDescription'));
-  document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', t('pageTitle'));
-  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', t('pageDescription'));
+  const isComparatorPage = Boolean(document.querySelector('[data-i18n="appTitle"]'));
+
+  if (isComparatorPage) {
+    document.title = t('pageTitle');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('pageDescription'));
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', t('pageTitle'));
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', t('pageDescription'));
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', t('pageTitle'));
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', t('pageDescription'));
+  }
 
   document.querySelectorAll('[data-i18n]').forEach((element) => {
     element.textContent = t(element.dataset.i18n);
