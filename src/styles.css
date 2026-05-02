@@ -123,9 +123,7 @@ canvas.tall {
 }
 
 .page-header {
-  display: grid;
-  gap: 1rem;
-  padding: calc(1.2rem + env(safe-area-inset-top)) 0.85rem 0.75rem;
+  display: none;
 }
 
 .top-dock {
@@ -682,6 +680,12 @@ canvas.tall {
     font-size: 1.05rem;
   }
 
+
+  .page-header {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
+  }
   .top-dock,
   .bottom-dock,
   .mobile-page-intro,
