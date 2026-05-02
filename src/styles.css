@@ -144,6 +144,10 @@ canvas.tall {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.dock-row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .language-switch {
   display: flex;
   align-self: flex-start;
