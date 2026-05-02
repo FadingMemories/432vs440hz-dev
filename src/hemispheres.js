@@ -478,46 +478,53 @@ function bindEvents() {
   });
   ['lineThickness', 'detail'].forEach((id) => $(id).addEventListener('input', markPatternsDirty));
   $('audioBtn').addEventListener('click', toggleAudio);
-  $('mobileAudioBtn')?.addEventListener('click', toggleAudio);
+  $('mobileAudioPlayBtn')?.addEventListener('click', startAudio);
+  $('mobileAudioStopBtn')?.addEventListener('click', stopAudio);
+}
+
+async function startAudio() {
+  if (audioOn) return;
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const values = currentValues();
+  oscA = audioContext.createOscillator();
+  oscB = audioContext.createOscillator();
+  gainA = audioContext.createGain();
+  gainB = audioContext.createGain();
+  merger = audioContext.createChannelMerger(2);
+  oscA.type = 'sine';
+  oscB.type = 'sine';
+  oscA.frequency.value = values.rawA;
+  oscB.frequency.value = values.rawB;
+  gainA.gain.value = channelAMuted ? 0.00001 : 0.035;
+  gainB.gain.value = channelBMuted ? 0.00001 : 0.035;
+  oscA.connect(gainA).connect(merger, 0, 0);
+  oscB.connect(gainB).connect(merger, 0, 1);
+  merger.connect(audioContext.destination);
+  oscA.start();
+  oscB.start();
+  audioOn = true;
+  $('audioBtn').textContent = 'Stop Audio';
+}
+
+async function stopAudio() {
+  if (!audioOn) return;
+  oscA.stop();
+  oscB.stop();
+  await audioContext.close();
+  audioOn = false;
+  audioContext = null;
+  oscA = null;
+  oscB = null;
+  gainA = null;
+  gainB = null;
+  $('audioBtn').textContent = 'Start Audio';
 }
 
 async function toggleAudio() {
-  if (!audioOn) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const values = currentValues();
-    oscA = audioContext.createOscillator();
-    oscB = audioContext.createOscillator();
-    gainA = audioContext.createGain();
-    gainB = audioContext.createGain();
-    merger = audioContext.createChannelMerger(2);
-    oscA.type = 'sine';
-    oscB.type = 'sine';
-    oscA.frequency.value = values.rawA;
-    oscB.frequency.value = values.rawB;
-    gainA.gain.value = channelAMuted ? 0.00001 : 0.035;
-    gainB.gain.value = channelBMuted ? 0.00001 : 0.035;
-    oscA.connect(gainA).connect(merger, 0, 0);
-    oscB.connect(gainB).connect(merger, 0, 1);
-    merger.connect(audioContext.destination);
-    oscA.start();
-    oscB.start();
-    audioOn = true;
-    $('audioBtn').textContent = 'Stop Audio';
-    if ($('mobileAudioBtn')) $('mobileAudioBtn').textContent = 'Stop Audio';
-  } else {
-    oscA.stop();
-    oscB.stop();
-    await audioContext.close();
-    audioOn = false;
-    audioContext = null;
-    oscA = null;
-    oscB = null;
-    gainA = null;
-    gainB = null;
-    $('audioBtn').textContent = 'Start Audio';
-    if ($('mobileAudioBtn')) $('mobileAudioBtn').textContent = 'Start Audio';
-  }
+  if (audioOn) await stopAudio();
+  else await startAudio();
 }
+
 
 bindEvents();
 renderBand('theta');

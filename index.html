@@ -119,11 +119,19 @@
   </header>
 
   <main class="app" id="main">
-    <div class="top-dock" aria-label="Current note">
+    <div class="top-dock" aria-label="Current note and quick controls">
+      <div class="dock-row">
+        <select id="mobileRootSelect" aria-label="Root note"></select>
+        <select id="mobileChordSelect" aria-label="Chord type"></select>
+      </div>
       <p class="top-dock-note"><strong>Now:</strong> <span id="mobileNowPlaying">C Maj7</span></p>
     </div>
 
     <section class="card mobile-page-intro" aria-label="Comparator introduction">
+      <div class="language-switch compact" aria-label="Language selector">
+        <button type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
+        <button type="button" data-language-switch="es" data-i18n="languageES">ES</button>
+      </div>
       <p class="eyebrow" data-i18n="eyebrow">Educational audio comparator</p>
       <h1 data-i18n="appTitle">432 vs 440 Hz Comparator</h1>
       <p class="intro" data-i18n="appSubtitle">
@@ -131,10 +139,6 @@
         harmonic geometry and cymatic-inspired visual models.
       </p>
       <div class="mobile-intro-meta">
-        <div class="language-switch compact" aria-label="Language selector">
-          <button type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
-          <button type="button" data-language-switch="es" data-i18n="languageES">ES</button>
-        </div>
         <nav class="tool-nav compact" aria-label="Tools">
           <a class="active" href="index.html">Comparator</a>
           <a href="hemi-sync.html">Hemi Sync</a>

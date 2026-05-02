@@ -154,6 +154,10 @@ canvas.tall {
   gap: 0.55rem;
 }
 
+.mobile-intro-meta .tool-nav.compact {
+  justify-content: flex-start;
+}
+
 .mobile-intro-meta .language-switch {
   justify-self: end;
 }
