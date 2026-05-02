@@ -114,7 +114,7 @@ export function drawConsonancePlate(canvasId) {
   const chord = CHORDS[state.chord] || CHORDS.maj7;
   const rootIndex = NOTES.indexOf(state.root);
   const chordSignature = chord.intervals.reduce((sum, interval, index) => (
-    sum + (interval + 1) * (index + 2) + chord.ratios[index] * 7
+    sum + (interval + 1) * (index + 2) + chord.ratios[index] * 5
   ), rootIndex + 1);
   const offscreen = document.createElement('canvas');
   const stable = state.base === 432;
@@ -129,12 +129,12 @@ export function drawConsonancePlate(canvasId) {
 
   for (let y = 0; y < offscreen.height; y += 1) {
     for (let x = 0; x < offscreen.width; x += 1) {
-      const nx = (x / (offscreen.width - 1)) * 2 - 1;
-      const ny = (y / (offscreen.height - 1)) * 2 - 1;
+      const nx = ((x / (offscreen.width - 1)) * 2 - 1) * 0.78;
+      const ny = ((y / (offscreen.height - 1)) * 2 - 1) * 0.78;
       const r = Math.sqrt(nx * nx + ny * ny);
       const idx = (y * offscreen.width + x) * 4;
 
-      if (r > 0.98) {
+      if (r > 0.82) {
         data[idx] = 0;
         data[idx + 1] = 0;
         data[idx + 2] = 0;
@@ -143,48 +143,47 @@ export function drawConsonancePlate(canvasId) {
       }
 
       let field = 0;
-      let interference = 0;
       const angle = Math.atan2(ny, nx);
       notes.forEach((note, index) => {
         const ratio = note.freq / rootFrequency;
         const interval = chord.intervals[index] || 0;
-        const ratioMode = Math.max(2, Math.round(ratio * 5 + index + (rootIndex % 4)));
-        const intervalMode = Math.max(3, ((interval + rootIndex + index * 2) % 11) + 3);
-        const rotation = (rootIndex / NOTES.length) * Math.PI * 2 + index * 0.31;
+        const ratioMode = Math.max(3, Math.round(ratio * 4 + (rootIndex % 3) + index));
+        const intervalMode = Math.max(4, ((interval + rootIndex + index) % 9) + 4);
+        const rotation = (rootIndex / NOTES.length) * Math.PI * 2 + index * 0.18;
         const rx = nx * Math.cos(rotation) - ny * Math.sin(rotation);
         const ry = nx * Math.sin(rotation) + ny * Math.cos(rotation);
-        const plate = Math.sin(ratioMode * Math.PI * rx) * Math.sin(intervalMode * Math.PI * ry)
-          - Math.sin(intervalMode * Math.PI * rx) * Math.sin(ratioMode * Math.PI * ry);
-        const radial = Math.cos((ratioMode + intervalMode + rootIndex) * angle + chordSignature * 0.08)
-          * Math.cos((ratio * 2.4 + index) * Math.PI * r);
-        const lattice = Math.sin((rootIndex + 2) * nx + intervalMode * ny + chordSignature * 0.12);
+        const plate = Math.sin(ratioMode * Math.PI * rx) * Math.sin(intervalMode * Math.PI * ry);
+        const cross = Math.sin(intervalMode * Math.PI * rx) * Math.sin(ratioMode * Math.PI * ry);
+        const radial = Math.cos((ratioMode + intervalMode) * angle + chordSignature * 0.045)
+          * Math.cos((ratio * 7 + index + rootIndex * 0.2) * Math.PI * r);
+        const ring = Math.cos((8 + interval + index * 2) * Math.PI * r + ratio * Math.PI);
 
-        field += plate * (stable ? 1.08 : 0.86) + radial * (stable ? 0.26 : 0.18);
-        interference += lattice * Math.sin((ratioMode + intervalMode) * (nx * ny + 0.08));
+        field += (plate - cross * (stable ? 0.92 : 0.78)) * 0.58
+          + radial * (stable ? 0.34 : 0.26)
+          + ring * (stable ? 0.18 : 0.14);
       });
 
       field /= notes.length;
-      interference /= notes.length;
 
       const drift = stable
-        ? 0.035 * Math.cos(chordSignature * 0.1 + r * 8)
-        : 0.28 * (
-            Math.sin(rootFrequency * 0.00018 + nx * (10 + rootIndex % 5) + ny * 7)
-            + Math.cos((nx * nx + ny * ny) * (18 + notes.length * 3) + chordSignature * 0.05)
-          );
+        ? 0.025 * Math.cos(chordSignature * 0.06 + r * 10)
+        : 0.13 * Math.sin(rootFrequency * 0.00016 + nx * (7 + rootIndex % 5) + ny * 5 + angle * 2);
       const symmetry = stable
-        ? 0.16 * Math.cos((rootIndex + notes.length + 4) * angle) * (1 - r)
-        : 0;
-      const combined = field + symmetry + interference * (stable ? 0.08 : 0.24) + drift;
-      const value = Math.abs(combined * (stable ? 0.9 : 1.28));
-      const line = Math.max(0, 1 - value / (stable ? 0.105 : 0.16));
-      const glow = Math.pow(line, stable ? 0.5 : 0.38);
-      const haze = Math.max(0, 1 - r) * (stable ? 0.08 : 0.16);
-      const contour = Math.max(0, 1 - Math.abs(Math.sin(combined * 10)) / (stable ? 0.86 : 0.64));
+        ? 0.11 * Math.cos((rootIndex + notes.length + 5) * angle) * (1 - r / 0.82)
+        : 0.045 * Math.sin((rootIndex + notes.length + 7) * angle + r * 9);
+      const combined = field + symmetry + drift;
+      const nodeLine = Math.max(0, 1 - Math.abs(combined) / (stable ? 0.22 : 0.28));
+      const ringLine = Math.max(0, 1 - Math.abs(Math.sin((10 + notes.length * 2 + rootIndex % 4) * Math.PI * r + chordSignature * 0.08)) / 0.52);
+      const spokeLine = Math.max(0, 1 - Math.abs(Math.sin((rootIndex + 8 + notes.length) * angle + chordSignature * 0.04)) / (stable ? 0.4 : 0.52));
+      const glow = Math.pow(Math.max(nodeLine * 0.9, ringLine * 0.78, spokeLine * 0.5), stable ? 0.62 : 0.54);
+      const center = Math.max(0, 1 - r / 0.24);
+      const edgeFade = Math.max(0, 1 - r / 0.82);
+      const warm = stable ? 0 : Math.max(0, Math.sin(angle * 5 + r * 18 + chordSignature * 0.05)) * 0.16;
+      const ambient = edgeFade * (stable ? 7 : 10);
 
-      data[idx] = stable ? glow * 78 + contour * 22 : glow * 240 + haze * 90;
-      data[idx + 1] = stable ? glow * 205 + haze * 42 : glow * 72 + contour * 28;
-      data[idx + 2] = stable ? glow * 255 + contour * 34 : glow * 156 + haze * 68;
+      data[idx] = ambient + (stable ? glow * 95 + center * 42 : glow * 230 + warm * 80);
+      data[idx + 1] = ambient + (stable ? glow * 185 + center * 58 : glow * 118 + center * 36);
+      data[idx + 2] = ambient + (stable ? glow * 255 + edgeFade * 28 : glow * 88 + edgeFade * 20);
       data[idx + 3] = 255;
     }
   }
