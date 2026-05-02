@@ -123,9 +123,7 @@ canvas.tall {
 }
 
 .page-header {
-  display: grid;
-  gap: 1rem;
-  padding: calc(1.2rem + env(safe-area-inset-top)) 0.85rem 0.75rem;
+  display: none;
 }
 
 .top-dock {
@@ -134,12 +132,40 @@ canvas.tall {
   z-index: 50;
   display: grid;
   gap: 0.55rem;
-  padding: calc(0.65rem + env(safe-area-inset-top)) 0.65rem 0.65rem;
-  border-bottom: 1px solid var(--line);
-  background: rgba(5, 8, 22, 0.95);
+  margin: calc(0.45rem + env(safe-area-inset-top)) 0.65rem 0.2rem;
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(5, 8, 22, 0.92);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(18px);
 }
 
+
+
+.mobile-intro-meta {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mobile-page-intro .tool-nav.compact {
+  justify-content: flex-start;
+}
+
+.hemi-now-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--green);
+  font-weight: 800;
+}
+
+.mobile-intro-meta .language-switch {
+  justify-self: end;
+}
 .dock-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -198,7 +224,7 @@ canvas.tall {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 0 0.65rem calc(6rem + env(safe-area-inset-bottom));
+  padding: 0.2rem 0.65rem calc(7rem + env(safe-area-inset-bottom));
 }
 
 .card {
@@ -414,6 +440,33 @@ canvas.tall {
   border-top: 1px solid var(--line);
   background: rgba(5, 8, 22, 0.96);
   backdrop-filter: blur(18px);
+}
+
+.bottom-dock.inline {
+  position: sticky;
+  top: calc(4.9rem + env(safe-area-inset-top));
+  margin: 0 -0.65rem;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-page-intro {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.mobile-page-intro h1 {
+  max-width: 100%;
+  font-size: clamp(1.45rem, 7vw, 2rem);
+  line-height: 1.05;
+}
+
+.mobile-page-intro .eyebrow {
+  color: var(--green);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .bottom-dock button {
@@ -655,8 +708,16 @@ canvas.tall {
     font-size: 1.05rem;
   }
 
+
+  .page-header {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
+  }
   .top-dock,
-  .bottom-dock {
+  .bottom-dock,
+  .mobile-page-intro,
+  .bottom-dock.inline {
     display: none;
   }
 

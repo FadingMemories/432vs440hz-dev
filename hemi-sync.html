@@ -57,13 +57,26 @@
     </div>
   </header>
 
+  <div class="top-dock hemi-top-dock" aria-label="Current state">
+    <div class="dock-row three">
+      <span class="hemi-now-chip" id="mobileHemiNow">Theta offset</span>
+      <span></span>
+      <div class="language-switch compact" aria-label="Language selector">
+        <button type="button">EN</button>
+        <button type="button">ES</button>
+      </div>
+    </div>
+  </div>
+
   <main class="hemi-app">
-    <section class="hemi-band-grid" id="bandButtons" aria-label="Beat frequency bands">
-      <button class="band-btn" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz offset</span></button>
-      <button class="band-btn active" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz offset</span></button>
+    <section class="card mobile-page-intro">
+      <p class="eyebrow">Stereo beat synchronization</p>
+      <h1>Hemi Sync</h1>
+      <p class="intro">Explore Hemi Sync with stereo tones, beat frequency and phase visuals in an educational, non-clinical format.</p>
+      <nav class="tool-nav compact" aria-label="Tools">
+        <a href="index.html">432 / 440 Comparator</a>
+        <a class="active" href="hemi-sync.html">Hemi Sync</a>
+      </nav>
     </section>
 
     <section class="hemi-topbar">
@@ -88,6 +101,15 @@
         <button class="ghost toggle-btn" type="button" id="muteB">Mute Channel B</button>
       </article>
     </section>
+
+    <section class="hemi-band-grid" id="bandButtons" aria-label="Beat frequency bands">
+      <button class="band-btn" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz offset</span></button>
+      <button class="band-btn active" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz offset</span></button>
+    </section>
+
 
     <section class="hemi-readout" aria-label="Current stereo tone data">
       <article class="card"><div class="metric"><span id="beat">4.00</span> <small>Hz</small></div><p>Beat frequency</p></article>
@@ -180,6 +202,14 @@
       </article>
     </section>
   </main>
+
+  <div class="bottom-dock hemi-bottom-dock" aria-label="Mobile playback controls">
+      <div class="dock-row three">
+        <button class="primary" type="button" id="mobileAudioPlayBtn">Play</button>
+        <button class="ghost" type="button" id="mobileAudioStopBtn">Stop</button>
+        <button class="ghost" type="button" id="mobilePauseVisualBtn">Pause Visuals</button>
+      </div>
+    </div>
 
   <script type="module" src="src/hemispheres.js"></script>
 </body>
