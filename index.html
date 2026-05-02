@@ -119,21 +119,34 @@
   </header>
 
   <main class="app" id="main">
-    <div class="top-dock" aria-label="Compact controls">
+    <div class="top-dock" aria-label="Current note and quick controls">
       <div class="dock-row">
         <select id="mobileRootSelect" aria-label="Root note"></select>
         <select id="mobileChordSelect" aria-label="Chord type"></select>
       </div>
+      <p class="top-dock-note"><strong>Now:</strong> <span id="mobileNowPlaying">C Maj7</span></p>
+    </div>
+
+    <section class="card mobile-page-intro" aria-label="Comparator introduction">
       <div class="language-switch compact" aria-label="Language selector">
         <button type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
         <button type="button" data-language-switch="es" data-i18n="languageES">ES</button>
       </div>
-      <nav class="tool-nav compact" aria-label="Tools">
-        <a class="active" href="index.html">Comparator</a>
-        <a href="hemi-sync.html">Hemi Sync</a>
-      </nav>
-    </div>
+      <p class="eyebrow" data-i18n="eyebrow">Educational audio comparator</p>
+      <h1 data-i18n="appTitle">432 vs 440 Hz Comparator</h1>
+      <p class="intro" data-i18n="appSubtitle">
+        Compare 432 Hz and 440 Hz tuning in real time through chord playback, frequency data,
+        harmonic geometry and cymatic-inspired visual models.
+      </p>
+      <div class="mobile-intro-meta">
+        <nav class="tool-nav compact" aria-label="Tools">
+          <a class="active" href="index.html">Comparator</a>
+          <a href="hemi-sync.html">Hemi Sync</a>
+        </nav>
+      </div>
+    </section>
 
+    
     <aside class="sidebar" aria-label="Sound controls">
       <section class="card section">
         <h2 data-i18n="sectionChord">1. Chord</h2>
@@ -316,12 +329,12 @@
   </main>
 
   <div class="bottom-dock" aria-label="Mobile playback controls">
-    <div class="dock-row three">
-      <button class="primary" type="button" id="mobilePlayBtn" data-i18n="mobilePlayBtn">Play</button>
-      <button class="ghost" type="button" id="mobileStopBtn" data-i18n="stopBtn">Stop</button>
-      <button class="ghost" type="button" id="mobileRandomBtn" data-i18n="mobileRandomBtn">Random</button>
+      <div class="dock-row three">
+        <button class="primary" type="button" id="mobilePlayBtn" data-i18n="mobilePlayBtn">Play</button>
+        <button class="ghost" type="button" id="mobileStopBtn" data-i18n="stopBtn">Stop</button>
+        <button class="ghost" type="button" id="mobileRandomBtn" data-i18n="mobileRandomBtn">Random</button>
+      </div>
     </div>
-  </div>
 
   <script type="module" src="src/app.js"></script>
 </body>
