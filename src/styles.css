@@ -416,6 +416,33 @@ canvas.tall {
   backdrop-filter: blur(18px);
 }
 
+.bottom-dock.inline {
+  position: sticky;
+  top: calc(4.9rem + env(safe-area-inset-top));
+  margin: 0 -0.65rem;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-page-intro {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.mobile-page-intro h1 {
+  max-width: 100%;
+  font-size: clamp(1.45rem, 7vw, 2rem);
+  line-height: 1.05;
+}
+
+.mobile-page-intro .eyebrow {
+  color: var(--green);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .bottom-dock button {
   padding-inline: 0.4rem;
   font-size: 0.78rem;
@@ -656,7 +683,9 @@ canvas.tall {
   }
 
   .top-dock,
-  .bottom-dock {
+  .bottom-dock,
+  .mobile-page-intro,
+  .bottom-dock.inline {
     display: none;
   }
 
