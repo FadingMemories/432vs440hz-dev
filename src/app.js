@@ -55,10 +55,15 @@ function init() {
   const mobileQuery = window.matchMedia('(max-width: 720px)');
   const advancedControls = document.querySelector('.advanced');
   if (mobileQuery.matches) advancedControls?.removeAttribute('open');
-  mobileQuery.addEventListener('change', (event) => {
+  const handleViewportChange = (event) => {
     if (event.matches) advancedControls?.removeAttribute('open');
     else advancedControls?.setAttribute('open', '');
-  });
+  };
+  if (typeof mobileQuery.addEventListener === 'function') {
+    mobileQuery.addEventListener('change', handleViewportChange);
+  } else if (typeof mobileQuery.addListener === 'function') {
+    mobileQuery.addListener(handleViewportChange);
+  }
   initUI({
     play,
     stop,

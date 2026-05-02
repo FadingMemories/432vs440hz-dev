@@ -50,15 +50,22 @@ export function playChord({ waveform = 'sine', volume = 0.32 } = {}) {
   noteList.forEach((note) => {
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    const panner = audioContext.createStereoPanner();
+    const panner = typeof audioContext.createStereoPanner === 'function'
+      ? audioContext.createStereoPanner()
+      : null;
     const targetGain = (volume * 0.9) / Math.max(2, noteList.length);
 
     oscillator.type = waveform;
     oscillator.frequency.value = note.freq;
-    panner.pan.value = note.pan;
+    if (panner) panner.pan.value = note.pan;
     gainNode.gain.value = 0.0001;
 
-    oscillator.connect(gainNode).connect(panner).connect(masterGain);
+    oscillator.connect(gainNode);
+    if (panner) {
+      gainNode.connect(panner).connect(masterGain);
+    } else {
+      gainNode.connect(masterGain);
+    }
     oscillator.start();
     gainNode.gain.setTargetAtTime(targetGain, audioContext.currentTime + 0.01, 0.05);
 
