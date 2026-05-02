@@ -62,7 +62,7 @@
       <span class="hemi-now-chip" id="mobileHemiNow">Theta offset</span>
       <span></span>
       <div class="language-switch compact" aria-label="Language selector">
-        <button type="button">EN</button>
+        <button type="button" class="active">EN</button>
         <button type="button">ES</button>
       </div>
     </div>
@@ -77,17 +77,7 @@
         <a href="index.html">432 / 440 Comparator</a>
         <a class="active" href="hemi-sync.html">Hemi Sync</a>
       </nav>
-    </section>    <section class="hemi-band-grid" id="bandButtons" aria-label="Beat frequency bands">
-      <button class="band-btn" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz offset</span></button>
-      <button class="band-btn active" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz offset</span></button>
-      <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz offset</span></button>
-    </section>
-
-
-
-    <section class="hemi-topbar">
+    </section>    <section class="hemi-topbar">
       <article class="card hemi-controls" aria-label="Audio controls">
         <label>Channel A frequency
           <input id="fA" type="number" min="20" max="1500" step="1" value="120">
@@ -100,15 +90,26 @@
         <button class="ghost toggle-btn" type="button" id="muteA">Mute Channel A</button>
         <button class="ghost toggle-btn" type="button" id="muteB">Mute Channel B</button>
       </article>
+    </section>
 
-      <article class="card hemi-current">
+    <section class="hemi-band-grid" id="bandButtons" aria-label="Beat frequency bands">
+      <button class="band-btn" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz offset</span></button>
+      <button class="band-btn active" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz offset</span></button>
+      <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz offset</span></button>
+    </section>
+
+    <article class="card hemi-current">
         <div>
           <h2 id="bandTitle">Theta offset</h2>
           <p id="bandDescription">A medium stereo offset for exploring slow beat movement and synchronization concepts.</p>
           <div class="preset-row" id="presetChips"></div>
         </div>
       </article>
-    </section>
+
+
+
 
 
 
