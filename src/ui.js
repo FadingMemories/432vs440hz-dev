@@ -1,0 +1,192 @@
+import { CHORD_KEYS, CHORDS, NOTES } from './chords.js';
+import { markNodalDirty, setState, state } from './state.js';
+import { formatNumber, getCentsDeviation, getNotes } from './tuning.js';
+import { t } from './i18n.js';
+
+export function $(id) {
+  return document.getElementById(id);
+}
+
+export function initUI(actions) {
+  populateRootSelects(actions);
+  populateChordControls(actions);
+  populateKeyboard(actions);
+  bindStaticControls(actions);
+  updateUI();
+}
+
+function populateRootSelects(actions) {
+  NOTES.forEach((note) => {
+    ['rootSelect', 'mobileRootSelect'].forEach((id) => {
+      const option = document.createElement('option');
+      option.value = note;
+      option.textContent = note;
+      $(id)?.appendChild(option);
+    });
+  });
+
+  $('rootSelect').value = state.root;
+  $('mobileRootSelect').value = state.root;
+
+  ['rootSelect', 'mobileRootSelect'].forEach((id) => {
+    $(id).addEventListener('change', (event) => {
+      setState({ root: event.target.value });
+      markNodalDirty();
+      syncControls();
+      updateUI();
+      actions.replayIfNeeded();
+    });
+  });
+}
+
+function populateChordControls(actions) {
+  CHORD_KEYS.forEach((key) => {
+    const chord = CHORDS[key];
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = chord.label;
+    $('mobileChordSelect').appendChild(option);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `chord-btn ghost ${key === state.chord ? 'active' : ''}`;
+    button.textContent = chord.label;
+    button.dataset.chord = key;
+    button.addEventListener('click', () => {
+      setState({ chord: key });
+      markNodalDirty();
+      syncControls();
+      updateUI();
+      actions.replayIfNeeded();
+    });
+    $('chordButtons').appendChild(button);
+  });
+
+  $('mobileChordSelect').value = state.chord;
+  $('mobileChordSelect').addEventListener('change', (event) => {
+    setState({ chord: event.target.value });
+    markNodalDirty();
+    syncControls();
+    updateUI();
+    actions.replayIfNeeded();
+  });
+}
+
+function populateKeyboard(actions) {
+  ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'D'].forEach((note) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `key ${note.includes('#') ? 'black' : ''}`;
+    button.textContent = note;
+    button.addEventListener('click', () => {
+      setState({ root: note });
+      markNodalDirty();
+      syncControls();
+      updateUI();
+      actions.play();
+    });
+    $('keyboard').appendChild(button);
+  });
+}
+
+function bindStaticControls(actions) {
+  $('playBtn').addEventListener('click', actions.play);
+  $('mobilePlayBtn').addEventListener('click', actions.play);
+  $('stopBtn').addEventListener('click', actions.stop);
+  $('mobileStopBtn').addEventListener('click', actions.stop);
+
+  $('listen432Visual').addEventListener('click', () => actions.setBase(432));
+  $('listen440Visual').addEventListener('click', () => actions.setBase(440));
+  $('listen432Plate').addEventListener('click', () => actions.setBase(432));
+  $('listen440Plate').addEventListener('click', () => actions.setBase(440));
+  $('mobile432Btn').addEventListener('click', () => actions.setBase(432));
+  $('mobile440Btn').addEventListener('click', () => actions.setBase(440));
+
+  $('volume').addEventListener('input', () => actions.setVolume(parseFloat($('volume').value)));
+  $('waveform').addEventListener('change', actions.replayIfNeeded);
+  $('visualSpeed').addEventListener('input', markNodalDirty);
+  $('resetSpeed').addEventListener('click', () => {
+    $('visualSpeed').value = 1;
+    markNodalDirty();
+  });
+  $('randomChord').addEventListener('click', () => {
+    const randomRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+    const randomChord = CHORD_KEYS[Math.floor(Math.random() * CHORD_KEYS.length)];
+    setState({ root: randomRoot, chord: randomChord });
+    markNodalDirty();
+    syncControls();
+    updateUI();
+    actions.play();
+  });
+}
+
+export function getPlaybackSettings() {
+  return {
+    waveform: $('waveform')?.value || 'sine',
+    volume: parseFloat($('volume')?.value || 0.32),
+  };
+}
+
+export function syncControls() {
+  $('rootSelect').value = state.root;
+  $('mobileRootSelect').value = state.root;
+  $('mobileChordSelect').value = state.chord;
+
+  document.querySelectorAll('.chord-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.chord === state.chord);
+  });
+}
+
+export function updateUI() {
+  const chord = CHORDS[state.chord] || CHORDS.maj7;
+  const notes432 = getNotes('equal', 432, state.root, state.chord);
+  const notes440 = getNotes('equal', 440, state.root, state.chord);
+  const cents = getCentsDeviation(notes432[0].freq, notes440[0].freq);
+
+  $('chordName').textContent = `${state.root} ${chord.label}`;
+  $('baseReadout').textContent = state.base;
+  $('systemReadout').textContent = state.tuning === 'equal' ? 'Equal' : state.tuning;
+  $('spreadReadout').textContent = `+${formatNumber(cents, 1)} cents`;
+
+  setActiveBase(state.base);
+  updateKeyboard(chord);
+  updateNoteTable();
+}
+
+function updateKeyboard(chord) {
+  const activeNotes = new Set(
+    chord.intervals.map((interval) => NOTES[(NOTES.indexOf(state.root) + interval) % 12])
+  );
+
+  document.querySelectorAll('.key').forEach((button) => {
+    button.classList.toggle('on', activeNotes.has(button.textContent));
+  });
+}
+
+function updateNoteTable() {
+  const table = $('noteTable');
+  const notes432 = getNotes('equal', 432, state.root, state.chord);
+  const notes440 = getNotes('equal', 440, state.root, state.chord);
+  const natural = getNotes('natural', 432, state.root, state.chord);
+  const rows = [
+    '<div class="row"><strong>Note</strong><strong>432 Hz</strong><strong>440 Hz</strong><strong>Natural</strong></div>',
+    ...notes432.map((note, index) => `<div class="row">
+      <strong>${note.note}</strong>
+      <span>${formatNumber(notes432[index].freq)} Hz</span>
+      <span>${formatNumber(notes440[index].freq)} Hz</span>
+      <span>${formatNumber(natural[index].cents, 1)} cents</span>
+    </div>`),
+  ];
+
+  table.innerHTML = rows.join('');
+  table.setAttribute('aria-label', `${t('notesAndProportions')}: ${state.root} ${CHORDS[state.chord].label}`);
+}
+
+function setActiveBase(base) {
+  ['listen432Visual', 'listen432Plate', 'mobile432Btn'].forEach((id) => {
+    $(id)?.classList.toggle('active', base === 432);
+  });
+  ['listen440Visual', 'listen440Plate', 'mobile440Btn'].forEach((id) => {
+    $(id)?.classList.toggle('active', base === 440);
+  });
+}

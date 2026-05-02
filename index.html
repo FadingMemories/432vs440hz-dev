@@ -1,269 +1,226 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>432 vs 440 Hz Comparator | Chord Visualizer, Cymatics & Harmonic Resonance Tool</title>
-  <meta name="description" content="Compare 432 Hz vs 440 Hz tuning with real-time chord playback, cymatic-style resonance patterns, harmonic geometry and interactive visualizations.">
-  <meta name="keywords" content="432 vs 440 hz comparator, 432 hz, 440 hz, chord visualizer, cymatics, harmonic resonance, tuning comparison, frequency visualizer, binaural chords, sound geometry">
-  <meta name="author" content="432 vs 440 Hz Comparator">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>432 vs 440 Hz Comparator | Tuning, Chords & Audio Visualization</title>
+  <meta name="description" content="Compare 432 Hz and 440 Hz tuning with real-time chord playback, frequency tables, harmonic geometry and cymatic-inspired educational visuals.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-
-  <!-- Canonical URL -->
+  <meta name="author" content="432 vs 440 Hz Comparator">
+  <meta name="theme-color" content="#050816">
   <link rel="canonical" href="https://432vs440hz.com/">
-
-  <!-- Favicon -->
+  <link rel="alternate" hreflang="en" href="https://432vs440hz.com/">
+  <link rel="alternate" hreflang="es" href="https://432vs440hz.com/?lang=es">
+  <link rel="alternate" hreflang="x-default" href="https://432vs440hz.com/">
   <link rel="icon" href="/favicon.ico" sizes="any">
 
-  <!-- Open Graph (Social Sharing) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="432 vs 440 Hz Comparator | Harmonic Geometry & Cymatics Tool">
-  <meta property="og:description" content="Interactive web tool to compare 432 Hz and 440 Hz through chords, resonance visuals, cymatic-inspired patterns and harmonic structures.">
+  <meta property="og:title" content="432 vs 440 Hz Comparator">
+  <meta property="og:description" content="An interactive, educational tool for comparing tuning references through chords, frequencies and generative audio visuals.">
   <meta property="og:url" content="https://432vs440hz.com/">
   <meta property="og:image" content="https://432vs440hz.com/preview.jpg">
   <meta property="og:site_name" content="432 vs 440 Hz Comparator">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="432 vs 440 Hz Comparator">
-  <meta name="twitter:description" content="Compare 432 Hz vs 440 Hz tuning with advanced chord playback and resonance visualizations.">
+  <meta name="twitter:description" content="Compare 432 Hz and 440 Hz tuning with chord playback, frequency data and harmonic visualizations.">
   <meta name="twitter:image" content="https://432vs440hz.com/preview.jpg">
 
-  <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "432 vs 440 Hz Comparator",
     "url": "https://432vs440hz.com/",
-    "description": "Interactive comparator for 432 Hz and 440 Hz tuning with chord visualization, harmonic geometry and cymatic-inspired resonance patterns.",
+    "description": "Interactive comparator for 432 Hz and 440 Hz tuning with chord playback, harmonic geometry and cymatic-inspired educational visuals.",
     "applicationCategory": "MusicApplication",
     "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
+    "isAccessibleForFree": true,
     "inLanguage": ["en", "es"]
   }
   </script>
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="src/css/main.css">
-
-  <!-- hreflang for multilingual SEO -->
-  <link rel="alternate" hreflang="en" href="https://432vs440hz.com/">
-  <link rel="alternate" hreflang="es" href="https://432vs440hz.com/?lang=es">
-  <link rel="alternate" hreflang="x-default" href="https://432vs440hz.com/">
+  <link rel="stylesheet" href="/src/styles.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>432 vs 440 Hz Comparator</h1>
-    <p class="intro">
-      Compare 432 Hz vs 440 Hz tuning in real time through chord playback, harmonic geometry, 
-      cymatic-inspired resonance patterns and interactive sound visualization. Explore how tuning shifts 
-      alter structure, symmetry and perceived resonance.
-    </p>
-    <div style="margin-top: 12px;">
-      <button class="ghost" data-language-switch="en" style="width: auto; padding: 6px 10px; margin-right: 4px;">English</button>
-      <button class="ghost" data-language-switch="es" style="width: auto; padding: 6px 10px;">Español</button>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow">Educational audio comparator</p>
+      <h1 data-i18n="appTitle">432 vs 440 Hz Comparator</h1>
+      <p class="intro" data-i18n="appSubtitle">
+        Compare 432 Hz and 440 Hz tuning in real time through chord playback, frequency data,
+        harmonic geometry and cymatic-inspired visual models.
+      </p>
     </div>
+    <nav class="language-switch" aria-label="Language">
+      <button class="ghost" type="button" data-language-switch="en" data-i18n="languageEN">English</button>
+      <button class="ghost" type="button" data-language-switch="es" data-i18n="languageES">Spanish</button>
+    </nav>
   </header>
 
-  <!-- Main Application -->
-  <main class="app">
-    <!-- Mobile Dock (Top) -->
-    <div class="mobile-dock">
+  <main class="app" id="main">
+    <div class="top-dock" aria-label="Compact controls">
       <div class="dock-row">
-        <select id="mobileRootSelect" aria-label="Mobile root note"></select>
-        <select id="mobileChordSelect" aria-label="Mobile chord select"></select>
+        <select id="mobileRootSelect" aria-label="Root note"></select>
+        <select id="mobileChordSelect" aria-label="Chord type"></select>
+      </div>
+      <div class="language-switch compact" aria-label="Language">
+        <button class="ghost" type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
+        <button class="ghost" type="button" data-language-switch="es" data-i18n="languageES">ES</button>
       </div>
     </div>
 
-    <!-- Sidebar: Chord Controls -->
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Sound controls">
       <section class="card section">
-        <h2>1 · Chord</h2>
+        <h2 data-i18n="sectionChord">1. Chord</h2>
 
-        <!-- Root Note Selection -->
-        <label>Root Note
+        <label><span data-i18n="rootNoteLabel">Root Note</span>
           <select id="rootSelect"></select>
         </label>
 
-        <!-- Chord Buttons -->
-        <div class="chords" id="chordButtons"></div>
+        <div class="chords" id="chordButtons" aria-label="Chord types"></div>
 
-        <!-- Play/Stop -->
         <div class="grid2">
-          <button class="primary" id="playBtn">Play Chord</button>
-          <button class="ghost" id="stopBtn">Stop</button>
+          <button class="primary" type="button" id="playBtn" data-i18n="playChordBtn">Play Chord</button>
+          <button class="ghost" type="button" id="stopBtn" data-i18n="stopBtn">Stop</button>
         </div>
 
-        <!-- Volume Control -->
-        <label>Master Volume
-          <input id="volume" type="range" min="0" max="0.4" step="0.01" value="0.4">
-        </label>
+        <details class="advanced" open>
+          <summary data-i18n="advancedControls">Advanced controls</summary>
+          <label><span data-i18n="masterVolumeLabel">Master Volume</span>
+            <input id="volume" type="range" min="0" max="0.4" step="0.01" value="0.32">
+          </label>
 
-        <!-- Waveform Selection -->
-        <label>Waveform
-          <select id="waveform">
-            <option value="sine" selected>Clean Sine</option>
-            <option value="triangle">Smooth Triangle</option>
-            <option value="sawtooth">Bright Sawtooth</option>
-          </select>
-        </label>
+          <label><span data-i18n="waveformLabel">Waveform</span>
+            <select id="waveform">
+              <option value="sine" selected data-i18n="waveformSine">Clean Sine</option>
+              <option value="triangle" data-i18n="waveformTriangle">Smooth Triangle</option>
+              <option value="sawtooth" data-i18n="waveformSawtooth">Bright Sawtooth</option>
+            </select>
+          </label>
 
-        <!-- Visual Speed -->
-        <label>Visual Speed
-          <input id="visualSpeed" type="range" min="0.25" max="3" step="0.05" value="1">
-        </label>
+          <label><span data-i18n="visualSpeedLabel">Visual Speed</span>
+            <input id="visualSpeed" type="range" min="0.25" max="3" step="0.05" value="1">
+          </label>
 
-        <!-- Reset & Random -->
-        <div class="grid2">
-          <button class="ghost" id="resetSpeed">Reset Speed</button>
-          <button class="ghost" id="randomChord">Random Chord</button>
-        </div>
+          <div class="grid2">
+            <button class="ghost" type="button" id="resetSpeed" data-i18n="resetSpeedBtn">Reset Speed</button>
+            <button class="ghost" type="button" id="randomChord" data-i18n="randomChordBtn">Random Chord</button>
+          </div>
+        </details>
 
-        <!-- Piano Keyboard -->
-        <div class="keyboard" id="keyboard"></div>
+        <div class="keyboard" id="keyboard" aria-label="Piano keyboard"></div>
       </section>
     </aside>
 
-    <!-- Main Content: Visualizations & Data -->
-    <section class="main">
-      <!-- Readout Metrics -->
-      <section class="readout">
-        <div class="card">
+    <section class="main" aria-label="Comparator">
+      <section class="readout" aria-label="Current comparison data">
+        <article class="card">
           <div class="metric" id="chordName">C Maj7</div>
-          <p>Active Chord</p>
-        </div>
-        <div class="card">
+          <p data-i18n="activeChordLabel">Active Chord</p>
+        </article>
+        <article class="card">
           <div class="metric"><span id="baseReadout">432</span> Hz</div>
-          <p>Active A4</p>
-        </div>
-        <div class="card">
+          <p data-i18n="activeALabel">Active A4</p>
+        </article>
+        <article class="card">
           <div class="metric" id="systemReadout">Equal</div>
-          <p>System</p>
-        </div>
-        <div class="card">
-          <div class="metric" id="spreadReadout">+31.8¢</div>
-          <p>432 → 440</p>
-        </div>
+          <p data-i18n="systemLabel">System</p>
+        </article>
+        <article class="card">
+          <div class="metric" id="spreadReadout">+31.8 cents</div>
+          <p data-i18n="spreadLabel">432 to 440</p>
+        </article>
       </section>
 
-      <!-- Harmonic Geometry Visualizations -->
-      <section class="visuals">
-        <!-- 432 Hz Geometry -->
-        <div class="card canvas-card">
+      <section class="visuals" aria-label="Harmonic geometry comparison">
+        <article class="card canvas-card">
           <div class="visual-toolbar">
-            <h2>Harmonic Geometry · 432 Hz</h2>
-            <button class="ghost" id="listen432Visual">Listen 432 Hz</button>
+            <h2 data-i18n="harmonicGeometry432">Harmonic Geometry, 432 Hz</h2>
+            <button class="ghost" type="button" id="listen432Visual" data-i18n="listen432Btn">Listen 432 Hz</button>
           </div>
-          <p class="intro">Represents stability, symmetry and proportional resonance of the chord.</p>
-          <canvas id="waveCanvas" width="1000" height="520"></canvas>
+          <p class="intro" data-i18n="geometryDesc432">A stable generative map based on the active chord proportions.</p>
+          <canvas id="waveCanvas" width="1000" height="520" aria-label="432 Hz harmonic geometry"></canvas>
           <div class="legend">
-            <span><i class="dot blue"></i> stable pattern</span>
-            <span><i class="dot green"></i> harmonic proportions</span>
+            <span><i class="dot blue"></i><span data-i18n="stablePattern">Stable pattern</span></span>
+            <span><i class="dot green"></i><span data-i18n="harmonicProportions">Harmonic proportions</span></span>
           </div>
-          <p class="intro">Generative visualization: uses chord proportions to form a more symmetric and stable figure.</p>
-        </div>
+        </article>
 
-        <!-- 440 Hz Geometry -->
-        <div class="card canvas-card">
+        <article class="card canvas-card">
           <div class="visual-toolbar">
-            <h2>Comparative Geometry · 440 Hz</h2>
-            <button class="ghost" id="listen440Visual">Listen 440 Hz</button>
+            <h2 data-i18n="harmonicGeometry440">Comparative Geometry, 440 Hz</h2>
+            <button class="ghost" type="button" id="listen440Visual" data-i18n="listen440Btn">Listen 440 Hz</button>
           </div>
-          <p class="intro">Represents shift, drift and relative tension versus the 432 pattern.</p>
-          <canvas id="circleCanvas" width="1000" height="520"></canvas>
+          <p class="intro" data-i18n="geometryDesc440">A comparative map showing the same chord under a higher A4 reference.</p>
+          <canvas id="circleCanvas" width="1000" height="520" aria-label="440 Hz harmonic geometry"></canvas>
           <div class="legend">
-            <span><i class="dot pink"></i> shifted pattern</span>
-            <span><i class="dot yellow"></i> micro-instability</span>
+            <span><i class="dot pink"></i><span data-i18n="shiftedPattern">Shifted pattern</span></span>
+            <span><i class="dot yellow"></i><span data-i18n="relativeDrift">Relative drift</span></span>
           </div>
-          <p class="intro">The 440 Hz tuning is visualized as a slightly more tense system: more drift, beating and geometric misalignment.</p>
-        </div>
+        </article>
       </section>
 
-      <!-- Resonant Plate & Nodal Pattern -->
-      <section class="visuals">
-        <div class="card canvas-card">
+      <section class="visuals" aria-label="Nodal pattern and context">
+        <article class="card canvas-card">
           <div class="visual-toolbar">
-            <h2>Resonant Plate / Nodal Pattern</h2>
+            <h2 data-i18n="resonantPlateLabel">Resonant Plate / Nodal Pattern</h2>
             <div class="plate-actions">
-              <button class="ghost" id="listen432Plate">432 Hz</button>
-              <button class="ghost" id="listen440Plate">440 Hz</button>
+              <button class="ghost" type="button" id="listen432Plate">432 Hz</button>
+              <button class="ghost" type="button" id="listen440Plate">440 Hz</button>
             </div>
           </div>
-          <p class="intro mobile-compact">
-            Generative visualization inspired by cymatics. Not an exact physical simulation: 
-            translates the active chord, tuning and proportions into visual nodes.
+          <p class="intro mobile-compact" data-i18n="resonantPlateDesc">
+            Generative visualization inspired by cymatics. It is not a physical simulation of a real plate.
           </p>
-          <canvas id="consonanceCanvas" class="tall" width="1000" height="520"></canvas>
+          <canvas id="consonanceCanvas" class="tall" width="1000" height="520" aria-label="Cymatic-inspired nodal pattern"></canvas>
           <div class="legend">
-            <span><i class="dot blue"></i> stable nodes</span>
-            <span><i class="dot pink"></i> perturbation</span>
+            <span><i class="dot blue"></i><span data-i18n="stableNodes">Stable nodes</span></span>
+            <span><i class="dot pink"></i><span data-i18n="perturbationNodes">Perturbation</span></span>
           </div>
-        </div>
+        </article>
 
-        <!-- Information Card -->
-        <div class="card canvas-card mobile-compact">
-          <h2>What You're Seeing</h2>
-          <p class="intro">
-            <strong>The visualizations are not direct physical measurements of sound.</strong> 
-            They are generative maps: use the chord frequencies to produce geometry, tension and visual interference.
+        <article class="card canvas-card mobile-compact">
+          <h2 data-i18n="whatYouSeeing">What You're Seeing</h2>
+          <p class="intro" data-i18n="visualizationNote">
+            The visuals are generative educational maps, not direct physical measurements of sound.
           </p>
-          <p class="intro">
-            On a real plate, shape would depend on material, size, thickness, excitation point, amplitude and surface. 
-            Here a visual model is used to compare tunings in an understandable way.
+          <p class="intro" data-i18n="physicalNote">
+            A real plate depends on material, size, thickness, excitation point, amplitude and surface.
           </p>
-          <p class="intro">
-            If patterns sometimes change little, it's because two chords share similar proportions. 
-            Now the pattern includes more root and chord-type information to differentiate better.
+          <p class="intro" data-i18n="scientificNote">
+            This project avoids therapeutic or scientific claims and focuses on audible and visual comparison.
           </p>
-        </div>
+        </article>
       </section>
 
-      <!-- Frequency Table -->
       <section class="card">
-        <h2>Notes and Proportions</h2>
-        <p class="intro">Check exact frequencies, differences between systems and harmonic deviations of each note.</p>
+        <h2 data-i18n="notesAndProportions">Notes and Proportions</h2>
+        <p class="intro" data-i18n="notesDesc">Check frequencies, tuning differences and natural-ratio deviation for each chord tone.</p>
         <div class="table" id="noteTable"></div>
       </section>
-    </section>
 
-    <!-- FAQ Section (Mobile) -->
-    <section class="card section mobile-compact">
-      <h2>What is 432 vs 440 Hz?</h2>
-      <p class="intro">
-        432 Hz and 440 Hz are alternative tuning references for A4. This comparator helps visualize how 
-        harmonic geometry, chord relationships and resonance structures may shift under different tuning systems.
-      </p>
-
-      <h2>How to Use This Comparator</h2>
-      <p class="intro">
-        Choose a root note, select a chord type, then compare 432 Hz and 440 Hz instantly through 
-        audio playback and visual resonance models.
-      </p>
-
-      <h2>FAQ</h2>
-      <p class="intro">
-        <strong>Does 432 Hz scientifically guarantee better effects?</strong> 
-        No. This tool is designed for comparative exploration, harmonic analysis and creative experimentation.
-      </p>
+      <section class="card faq">
+        <h2 data-i18n="faqTitle">FAQ</h2>
+        <h3 data-i18n="faqQuestion2">What is 432 vs 440 Hz?</h3>
+        <p data-i18n="faqAnswer2">432 Hz and 440 Hz are two A4 tuning references. This tool compares how chords shift when the reference changes.</p>
+        <h3 data-i18n="faqQuestion1">Does 432 Hz scientifically guarantee better effects?</h3>
+        <p data-i18n="faqAnswer1">No. The comparator is for harmonic exploration, listening practice and creative experimentation.</p>
+        <h3 data-i18n="faqQuestion3">How do I use this comparator?</h3>
+        <p data-i18n="faqAnswer3">Choose a root note and chord type, then play and compare the two tuning references.</p>
+      </section>
     </section>
   </main>
 
-  <!-- Bottom Dock (Mobile Playback Controls) -->
-  <div class="bottom-dock">
-    <div class="dock-row three">
-      <button class="primary" id="mobilePlayBtn">Play</button>
-      <button class="ghost" id="mobileStopBtn">Stop</button>
-      <button class="ghost" id="mobileRandomBtn">Random</button>
+  <div class="bottom-dock" aria-label="Mobile playback controls">
+    <div class="dock-row four">
+      <button class="primary" type="button" id="mobilePlayBtn" data-i18n="mobilePlayBtn">Play</button>
+      <button class="ghost" type="button" id="mobileStopBtn" data-i18n="stopBtn">Stop</button>
+      <button class="ghost" type="button" id="mobile432Btn">432 Hz</button>
+      <button class="ghost" type="button" id="mobile440Btn">440 Hz</button>
     </div>
   </div>
 
-  <!-- Application Modules (ES Modules) -->
-  <script type="module" src="src/js/app.js"></script>
+  <script type="module" src="/src/app.js"></script>
 </body>
 </html>
