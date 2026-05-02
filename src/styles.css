@@ -139,23 +139,25 @@ canvas.tall {
 }
 
 
-.top-dock-note {
-  margin: 0;
-  color: var(--text);
-  font-size: 0.95rem;
-}
-
-.top-dock-note strong {
-  color: var(--green);
-}
 
 .mobile-intro-meta {
   display: grid;
   gap: 0.55rem;
 }
 
-.mobile-intro-meta .tool-nav.compact {
+.mobile-page-intro .tool-nav.compact {
   justify-content: flex-start;
+}
+
+.hemi-now-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--green);
+  font-weight: 800;
 }
 
 .mobile-intro-meta .language-switch {

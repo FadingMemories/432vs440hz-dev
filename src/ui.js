@@ -140,7 +140,6 @@ export function updateUI() {
 
   const activeChordLabel = `${state.root} ${chord.label}`;
   $('chordName').textContent = activeChordLabel;
-  if ($('mobileNowPlaying')) $('mobileNowPlaying').textContent = activeChordLabel;
   $('baseReadout').textContent = state.base;
   $('systemReadout').textContent = state.tuning === 'equal' ? 'Equal' : state.tuning;
   $('spreadReadout').textContent = `+${formatNumber(cents, 1)} cents`;
