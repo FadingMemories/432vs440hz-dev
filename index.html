@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>432 vs 440 Hz Comparator | Tuning, Chords & Audio Visualization</title>
-  <meta name="description" content="Compare 432 Hz and 440 Hz tuning with real-time chord playback, frequency tables, harmonic geometry and cymatic-inspired educational visuals.">
+  <title>432 vs 440 Hz Comparator | Free Tuning & Frequency Visualizer</title>
+  <meta name="description" content="Use the 432 vs 440 Hz Comparator to compare A4 tuning references with chord playback, frequency tables and cymatics-inspired generative visuals.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="author" content="432 vs 440 Hz Comparator">
   <meta name="theme-color" content="#050816">
@@ -15,16 +15,19 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="432 vs 440 Hz Comparator">
-  <meta property="og:description" content="An interactive, educational tool for comparing tuning references through chords, frequencies and generative audio visuals.">
+  <meta property="og:title" content="432 vs 440 Hz Comparator | Free Tuning Visualizer">
+  <meta property="og:description" content="Compare 432 Hz and 440 Hz tuning references with chord playback, frequency data and a cymatics-inspired generative nodal model.">
   <meta property="og:url" content="https://432vs440hz.com/">
   <meta property="og:image" content="https://432vs440hz.com/preview.jpg">
+  <meta property="og:image:alt" content="432 vs 440 Hz Comparator interface with harmonic audio visualizations">
   <meta property="og:site_name" content="432 vs 440 Hz Comparator">
+  <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="432 vs 440 Hz Comparator">
-  <meta name="twitter:description" content="Compare 432 Hz and 440 Hz tuning with chord playback, frequency data and harmonic visualizations.">
+  <meta name="twitter:description" content="Free educational tuning comparator for A4 = 432 Hz and A4 = 440 Hz with audio playback and generative visuals.">
   <meta name="twitter:image" content="https://432vs440hz.com/preview.jpg">
+  <meta name="twitter:image:alt" content="432 vs 440 Hz Comparator audio visualization interface">
 
   <script type="application/ld+json">
   {
@@ -32,11 +35,64 @@
     "@type": "WebApplication",
     "name": "432 vs 440 Hz Comparator",
     "url": "https://432vs440hz.com/",
-    "description": "Interactive comparator for 432 Hz and 440 Hz tuning with chord playback, harmonic geometry and cymatic-inspired educational visuals.",
+    "description": "Free educational comparator for 432 Hz and 440 Hz tuning references with chord playback, frequency data and cymatics-inspired generative visuals.",
     "applicationCategory": "MusicApplication",
     "operatingSystem": "Any",
     "isAccessibleForFree": true,
+    "browserRequirements": "Requires a modern browser with Web Audio API and Canvas support.",
     "inLanguage": ["en", "es"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the 432 vs 440 Hz Comparator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The 432 vs 440 Hz Comparator is an educational web tool for comparing two A4 tuning references through chord playback, frequency tables and generative visual models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does 432 Hz sound different from 440 Hz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. A4 = 432 Hz is lower than A4 = 440 Hz, so every equal-tempered note is shifted downward by about 31.8 cents. The difference is audible as a small pitch change, not as a guaranteed health or emotional effect."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the cymatics-inspired pattern a physical simulation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The visualization is a cymatics-inspired generative nodal model. It uses musical intervals and tuning references to create an educational visual comparison, not a measurement of a real plate."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://432vs440hz.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "432 vs 440 Hz Comparator",
+        "item": "https://432vs440hz.com/"
+      }
+    ]
   }
   </script>
 
@@ -140,7 +196,7 @@
             <button class="ghost" type="button" id="listen432Visual" data-i18n="listen432Btn">Listen 432 Hz</button>
           </div>
           <p class="intro" data-i18n="geometryDesc432">A stable generative map based on the active chord proportions.</p>
-          <canvas id="waveCanvas" width="1000" height="520" aria-label="432 Hz harmonic geometry"></canvas>
+          <canvas id="waveCanvas" width="1000" height="520" role="img" aria-label="432 Hz harmonic geometry visualization for the active chord"></canvas>
           <div class="legend">
             <span><i class="dot blue"></i><span data-i18n="stablePattern">Stable pattern</span></span>
             <span><i class="dot green"></i><span data-i18n="harmonicProportions">Harmonic proportions</span></span>
@@ -153,7 +209,7 @@
             <button class="ghost" type="button" id="listen440Visual" data-i18n="listen440Btn">Listen 440 Hz</button>
           </div>
           <p class="intro" data-i18n="geometryDesc440">A comparative map showing the same chord under a higher A4 reference.</p>
-          <canvas id="circleCanvas" width="1000" height="520" aria-label="440 Hz harmonic geometry"></canvas>
+          <canvas id="circleCanvas" width="1000" height="520" role="img" aria-label="440 Hz comparative harmonic geometry visualization for the active chord"></canvas>
           <div class="legend">
             <span><i class="dot pink"></i><span data-i18n="shiftedPattern">Shifted pattern</span></span>
             <span><i class="dot yellow"></i><span data-i18n="relativeDrift">Relative drift</span></span>
@@ -164,7 +220,7 @@
       <section class="visuals" aria-label="Nodal pattern and context">
         <article class="card canvas-card">
           <div class="visual-toolbar">
-            <h2 data-i18n="resonantPlateLabel">Resonant Plate / Nodal Pattern</h2>
+            <h2 data-i18n="resonantPlateLabel">Cymatics-inspired Nodal Model</h2>
             <div class="plate-actions">
               <button class="ghost" type="button" id="listen432Plate">432 Hz</button>
               <button class="ghost" type="button" id="listen440Plate">440 Hz</button>
@@ -173,7 +229,7 @@
           <p class="intro mobile-compact" data-i18n="resonantPlateDesc">
             Generative visualization inspired by cymatics. It is not a physical simulation of a real plate.
           </p>
-          <canvas id="consonanceCanvas" class="tall" width="1000" height="520" aria-label="Cymatic-inspired nodal pattern"></canvas>
+          <canvas id="consonanceCanvas" class="tall" width="1000" height="520" role="img" aria-label="Cymatics-inspired generative nodal model for the active tuning and chord"></canvas>
           <div class="legend">
             <span><i class="dot blue"></i><span data-i18n="stableNodes">Stable nodes</span></span>
             <span><i class="dot pink"></i><span data-i18n="perturbationNodes">Perturbation</span></span>
@@ -208,6 +264,45 @@
         <p data-i18n="faqAnswer1">No. The comparator is for harmonic exploration, listening practice and creative experimentation.</p>
         <h3 data-i18n="faqQuestion3">How do I use this comparator?</h3>
         <p data-i18n="faqAnswer3">Choose a root note and chord type, then play and compare the two tuning references.</p>
+      </section>
+
+      <section class="card seo-content" aria-labelledby="seo-heading">
+        <h2 id="seo-heading" data-i18n="seoMainTitle">432 vs 440 Hz Comparator Guide</h2>
+
+        <article>
+          <h3 data-i18n="seoWhatTitle">What is the 432 vs 440 Hz Comparator?</h3>
+          <p data-i18n="seoWhatText">The 432 vs 440 Hz Comparator is an educational audio tool for comparing two A4 tuning references. It lets you hear the same chord at A4 = 432 Hz and A4 = 440 Hz, review the resulting note frequencies, and study how interval relationships can be represented visually.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seoHowTitle">How to use the tuning comparator</h3>
+          <p data-i18n="seoHowText">Choose a root note, select a chord type, press Play, and switch between the two tuning bases. The frequency table shows the measured pitch difference, while the visual panels provide a structured way to compare chord shape, symmetry and movement.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seo432Title">What is A4 = 432 Hz?</h3>
+          <p data-i18n="seo432Text">A4 = 432 Hz means the A above middle C is tuned to 432 cycles per second. In equal temperament, the rest of the chromatic scale is calculated from that reference, so every note is slightly lower than it would be with A4 = 440 Hz.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seo440Title">What is A4 = 440 Hz?</h3>
+          <p data-i18n="seo440Text">A4 = 440 Hz is the most common modern concert pitch reference. It is widely used in orchestras, digital instruments, tuners and music production software, which makes it a practical baseline for comparison.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seoDifferenceTitle">Does 432 Hz sound different from 440 Hz?</h3>
+          <p data-i18n="seoDifferenceText">Yes. A4 = 432 Hz is lower than A4 = 440 Hz by about 31.8 cents. This produces a subtle but audible pitch shift across the full chord. The difference is musical and measurable; it should not be presented as medical, spiritual or scientifically guaranteed.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seoDisclaimerTitle">Cymatics-inspired visualization disclaimer</h3>
+          <p data-i18n="seoDisclaimerText">The nodal pattern is a cymatics-inspired generative model, not an exact physical simulation. Real cymatic plates depend on material, size, thickness, excitation point, amplitude and surface behavior. Here, interval ratios and tuning references are translated into visual structure for educational comparison.</p>
+        </article>
+
+        <article>
+          <h3 data-i18n="seoFaqTitle">FAQ</h3>
+          <p data-i18n="seoFaqText">Use this tool to explore tuning differences, train your ear and inspect chord frequencies. It is designed for musicians, producers, students and curious listeners who want a neutral 432 vs 440 Hz Comparator without exaggerated claims.</p>
+        </article>
       </section>
     </section>
   </main>

@@ -391,6 +391,36 @@ canvas.tall {
   display: none;
 }
 
+.seo-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.seo-content article {
+  display: grid;
+  gap: 0.35rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seo-content article:first-of-type {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.seo-content h2 {
+  font-size: 1.08rem;
+}
+
+.seo-content h3 {
+  margin: 0;
+  color: var(--text);
+}
+
+.seo-content p {
+  max-width: 72rem;
+}
+
 @media (max-width: 720px) {
   .sidebar .section > h2,
   .sidebar label:first-of-type,
