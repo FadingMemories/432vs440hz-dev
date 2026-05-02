@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://432vs440hz.com/sitemap.xml
