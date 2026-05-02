@@ -76,7 +76,7 @@ p {
 }
 
 h1 {
-  max-width: 13ch;
+  max-width: 99ch;
   font-size: clamp(2rem, 7vw, 4.4rem);
   line-height: 0.98;
   letter-spacing: 0;
@@ -122,23 +122,52 @@ canvas.tall {
   display: none;
 }
 
-.top-dock {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    display: grid;
-    gap: 0.55rem;
-    padding: calc(0.65rem + env(safe-area-inset-top)) 0.65rem 0.65rem;
-    border-bottom: 1px solid var(--line);
-    background: rgba(5, 8, 22, 0.95);
-    backdrop-filter: blur(18px);
-    align-items: baseline;
-    justify-content: stretch;
-    align-content: center;
-    grid-auto-flow: column;
-    justify-items: stretch;
+.page-header {
+  display: none;
 }
 
+.top-dock {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: grid;
+  gap: 0.55rem;
+  padding: calc(0.65rem + env(safe-area-inset-top)) 0.65rem 0.65rem;
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 8, 22, 0.95);
+  backdrop-filter: blur(18px);
+  align-items: baseline;
+  justify-content: stretch;
+  align-content: center;
+  grid-auto-flow: column;
+  justify-items: stretch;
+}
+
+
+
+.mobile-intro-meta {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mobile-page-intro .tool-nav.compact {
+  justify-content: flex-start;
+}
+
+.hemi-now-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--green);
+  font-weight: 800;
+}
+
+.mobile-intro-meta .language-switch {
+  justify-self: end;
+}
 .dock-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -197,7 +226,7 @@ canvas.tall {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 0 0.65rem calc(6rem + env(safe-area-inset-bottom));
+  padding: 0.2rem 0.65rem calc(7rem + env(safe-area-inset-bottom));
 }
 
 .card {
@@ -415,6 +444,33 @@ canvas.tall {
   backdrop-filter: blur(18px);
 }
 
+.bottom-dock.inline {
+  position: sticky;
+  top: calc(4.9rem + env(safe-area-inset-top));
+  margin: 0 -0.65rem;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-page-intro {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.mobile-page-intro h1 {
+  max-width: 100%;
+  font-size: clamp(1.45rem, 7vw, 2rem);
+  line-height: 1.05;
+}
+
+.mobile-page-intro .eyebrow {
+  color: var(--green);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .bottom-dock button {
   padding-inline: 0.4rem;
   font-size: 0.78rem;
@@ -454,6 +510,281 @@ canvas.tall {
   max-width: 72rem;
 }
 
+.page-header h1 {
+  max-width: 16ch;
+}
+
+.tool-nav {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.tool-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.tool-nav a:hover,
+.tool-nav a.active {
+  color: var(--text);
+  border-color: rgba(52, 211, 153, 0.55);
+  background: rgba(52, 211, 153, 0.12);
+}
+
+.tool-nav.compact {
+  margin-top: 0;
+  justify-content: flex-end;
+}
+
+.hemi-app {
+  display: grid;
+  gap: 0.85rem;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 0.65rem calc(1.2rem + env(safe-area-inset-bottom));
+}
+
+.hemi-band-grid,
+.hemi-topbar,
+.hemi-readout,
+.hemi-layout,
+.hemi-settings,
+.patterns {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hemi-band-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.band-btn,
+.preset-chip {
+  display: grid;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.band-btn {
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  background: rgba(15, 23, 42, 0.66);
+}
+
+.band-btn strong,
+.preset-chip strong {
+  color: var(--text);
+}
+
+.band-btn span,
+.preset-chip small,
+.hint {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.42;
+}
+
+.hemi-current,
+.hemi-controls,
+.hemi-panel {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.preset-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+
+.preset-chip {
+  width: auto;
+  max-width: 18rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius);
+}
+
+.hemi-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-readout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-panel-header {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.visual-menu {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.visual-btn,
+.mini-btn {
+  width: auto;
+  min-height: 2.25rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.visual-panel {
+  display: none;
+}
+
+.visual-panel.active {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.wave-canvas,
+.main-canvas {
+  height: 320px;
+}
+
+.toggle-btn.paused {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.hemi-shell {
+  grid-template-columns: 1fr;
+  padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+}
+
+.hemi-control-strip,
+.hemi-main,
+.hemi-category-panel,
+.hemi-program-panel,
+.hemi-section-heading,
+.hemi-frequency-grid,
+.hemi-field-grid,
+.hemi-sidebar-ranges,
+.hemi-program-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hemi-control-strip {
+  align-items: end;
+}
+
+.hemi-control-actions {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.hemi-field-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-category-panel {
+  gap: 0.9rem;
+}
+
+.hemi-program-panel {
+  gap: 0.85rem;
+  background: rgba(13, 20, 34, 0.74);
+}
+
+.hemi-section-heading {
+  gap: 0.35rem;
+}
+
+.hemi-section-heading h2 {
+  font-size: 1.28rem;
+}
+
+.subtle-presets {
+  align-content: start;
+  gap: 0.5rem;
+  margin-top: 0;
+}
+
+.subtle-presets .preset-chip {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  min-height: 0;
+  max-width: none;
+  padding: 0.62rem 0.72rem;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.subtle-presets .preset-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(52, 211, 153, 0.32);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.subtle-presets .preset-chip strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtle-presets .preset-chip small {
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hemi-live-data {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.hemi-live-data article {
+  display: grid;
+  gap: 0.15rem;
+  min-height: 0;
+  padding: 0.58rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.52), rgba(2, 6, 23, 0.28));
+}
+
+.hemi-live-data article > span {
+  font-size: 0.68rem;
+  letter-spacing: 0;
+}
+
+.hemi-live-data strong {
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.hemi-visuals {
+  grid-template-columns: 1fr;
+}
+
+
+
 @media (max-width: 720px) {
   .sidebar .section > h2,
   .sidebar label:first-of-type,
@@ -476,6 +807,40 @@ canvas.tall {
   .visuals:nth-of-type(2) .mobile-compact,
   .faq {
     display: none;
+  }
+
+  .hemi-shell {
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  }
+
+  .hemi-control-strip {
+    gap: 0.7rem;
+  }
+
+  .hemi-control-actions h2 {
+    display: none;
+  }
+
+  .hemi-control-actions > .grid2 {
+    display: none;
+  }
+
+  .hemi-band-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-program-grid,
+  .hemi-live-data {
+    grid-template-columns: 1fr;
+  }
+
+  .subtle-presets {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-visuals canvas {
+    height: 44vh;
   }
 }
 
@@ -502,8 +867,16 @@ canvas.tall {
     font-size: 1.05rem;
   }
 
+
+  .page-header {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
+  }
   .top-dock,
-  .bottom-dock {
+  .bottom-dock,
+  .mobile-page-intro,
+  .bottom-dock.inline {
     display: none;
   }
 
@@ -513,6 +886,40 @@ canvas.tall {
     align-items: start;
     gap: 1rem;
     padding: 0.75rem clamp(1.5rem, 4vw, 3rem) 2.5rem;
+  }
+
+  .hemi-shell {
+    grid-template-columns: minmax(280px, 25%) minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .hemi-control-strip {
+    position: sticky;
+    top: 1rem;
+    grid-template-columns: 1fr;
+    align-self: start;
+  }
+
+  .hemi-frequency-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-sidebar-ranges {
+    gap: 0.65rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .hemi-control-strip .hemi-band-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-control-strip .band-btn {
+    padding: 0.65rem 0.7rem;
   }
 
   .sidebar {
@@ -550,6 +957,22 @@ canvas.tall {
     gap: 1rem;
   }
 
+  .hemi-visuals {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-visuals .hemi-settings {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .hemi-visuals #resetWaveSpeed {
+    width: auto;
+    min-width: 5.5rem;
+    min-height: 2.55rem;
+    padding: 0.45rem 0.7rem;
+  }
+
   canvas {
     height: 300px;
   }
@@ -568,6 +991,63 @@ canvas.tall {
 
   .faq {
     display: block;
+  }
+
+  .hemi-app {
+    padding: 0.75rem clamp(1.5rem, 4vw, 3rem) 2.5rem;
+  }
+
+  .hemi-band-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .subtle-presets {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hemi-program-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .hemi-program-grid .hemi-live-data {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 42rem;
+  }
+
+  .hemi-topbar {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+
+  .hemi-readout {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .hemi-layout {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .hemi-settings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wave-settings {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .wave-canvas {
+    height: 340px;
+  }
+
+  .main-canvas {
+    height: 460px;
+  }
+
+  .patterns {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
