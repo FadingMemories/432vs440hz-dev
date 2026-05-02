@@ -76,7 +76,7 @@ p {
 }
 
 h1 {
-  max-width: 13ch;
+  max-width: 99ch;
   font-size: clamp(2rem, 7vw, 4.4rem);
   line-height: 0.98;
   letter-spacing: 0;
@@ -660,6 +660,129 @@ canvas.tall {
   text-decoration: line-through;
 }
 
+.hemi-shell {
+  grid-template-columns: 1fr;
+  padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+}
+
+.hemi-control-strip,
+.hemi-main,
+.hemi-category-panel,
+.hemi-program-panel,
+.hemi-section-heading,
+.hemi-frequency-grid,
+.hemi-field-grid,
+.hemi-sidebar-ranges,
+.hemi-program-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hemi-control-strip {
+  align-items: end;
+}
+
+.hemi-control-actions {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.hemi-field-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hemi-category-panel {
+  gap: 0.9rem;
+}
+
+.hemi-program-panel {
+  gap: 0.85rem;
+  background: rgba(13, 20, 34, 0.74);
+}
+
+.hemi-section-heading {
+  gap: 0.35rem;
+}
+
+.hemi-section-heading h2 {
+  font-size: 1.28rem;
+}
+
+.subtle-presets {
+  align-content: start;
+  gap: 0.5rem;
+  margin-top: 0;
+}
+
+.subtle-presets .preset-chip {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  min-height: 0;
+  max-width: none;
+  padding: 0.62rem 0.72rem;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.subtle-presets .preset-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(52, 211, 153, 0.32);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.subtle-presets .preset-chip strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtle-presets .preset-chip small {
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hemi-live-data {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.hemi-live-data article {
+  display: grid;
+  gap: 0.15rem;
+  min-height: 0;
+  padding: 0.58rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.52), rgba(2, 6, 23, 0.28));
+}
+
+.hemi-live-data article > span {
+  font-size: 0.68rem;
+  letter-spacing: 0;
+}
+
+.hemi-live-data strong {
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.hemi-visuals {
+  grid-template-columns: 1fr;
+}
+
+
+
 @media (max-width: 720px) {
   .sidebar .section > h2,
   .sidebar label:first-of-type,
@@ -682,6 +805,40 @@ canvas.tall {
   .visuals:nth-of-type(2) .mobile-compact,
   .faq {
     display: none;
+  }
+
+  .hemi-shell {
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  }
+
+  .hemi-control-strip {
+    gap: 0.7rem;
+  }
+
+  .hemi-control-actions h2 {
+    display: none;
+  }
+
+  .hemi-control-actions > .grid2 {
+    display: none;
+  }
+
+  .hemi-band-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-program-grid,
+  .hemi-live-data {
+    grid-template-columns: 1fr;
+  }
+
+  .subtle-presets {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-visuals canvas {
+    height: 44vh;
   }
 }
 
@@ -729,6 +886,40 @@ canvas.tall {
     padding: 0.75rem clamp(1.5rem, 4vw, 3rem) 2.5rem;
   }
 
+  .hemi-shell {
+    grid-template-columns: minmax(280px, 25%) minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .hemi-control-strip {
+    position: sticky;
+    top: 1rem;
+    grid-template-columns: 1fr;
+    align-self: start;
+  }
+
+  .hemi-frequency-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-sidebar-ranges {
+    gap: 0.65rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .hemi-control-strip .hemi-band-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-control-strip .band-btn {
+    padding: 0.65rem 0.7rem;
+  }
+
   .sidebar {
     position: sticky;
     top: 1rem;
@@ -764,6 +955,22 @@ canvas.tall {
     gap: 1rem;
   }
 
+  .hemi-visuals {
+    grid-template-columns: 1fr;
+  }
+
+  .hemi-visuals .hemi-settings {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .hemi-visuals #resetWaveSpeed {
+    width: auto;
+    min-width: 5.5rem;
+    min-height: 2.55rem;
+    padding: 0.45rem 0.7rem;
+  }
+
   canvas {
     height: 300px;
   }
@@ -790,6 +997,21 @@ canvas.tall {
 
   .hemi-band-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .subtle-presets {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hemi-program-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .hemi-program-grid .hemi-live-data {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 42rem;
   }
 
   .hemi-topbar {

@@ -1,62 +1,64 @@
+import { initI18n } from './i18n.js';
+
 const $ = (id) => document.getElementById(id);
 
-const canvases = ['waves', 'beatWave', 'plateA', 'plateB', 'lissajous', 'mandala'].reduce((items, id) => {
-  items[id] = $(id);
-  return items;
-}, {});
+const canvases = {
+  waves: $('waves'),
+};
 
-const ctx = Object.fromEntries(
-  Object.entries(canvases).map(([key, canvas]) => [key, canvas.getContext('2d')])
-);
+const ctx = {
+  waves: canvases.waves.getContext('2d'),
+};
 
 const bands = {
   delta: {
-    title: 'Delta offset',
-    desc: 'Slow stereo offsets often used for calm, low-movement listening experiments.',
+    title: 'Delta - deep rest',
+    desc: 'Very slow offsets for deep relaxation and rest-oriented exploration.',
     presets: [
-      [120, 122, 'Slow 2 Hz', 'Very low offset with a 120 Hz base tone.'],
-      [120, 123, 'Slow 3 Hz', 'A low offset with slightly more movement.'],
-      [120, 123.5, 'Slow 3.5 Hz', 'Near the delta/theta boundary for comparison.'],
+      [120, 122, 'Rest 2 Hz', 'Very low offset around 120 Hz for deep resting beats.'],
+      [120, 123, 'Soft Delta 3 Hz', 'Gentle deep rest with a slightly higher offset.'],
+      [120, 123.5, 'Recovery 3.5 Hz', 'Near the delta/theta boundary for sustained calm.'],
     ],
   },
   theta: {
-    title: 'Theta offset',
-    desc: 'Medium-slow offsets for exploring beat movement, visualization and low-tempo stereo contrast.',
+    title: 'Theta - meditation',
+    desc: 'Medium-slow offsets for meditation, creativity and internal visualization.',
     presets: [
-      [120, 124, '4 Hz comparison', 'Lower theta-range offset with a comfortable 120 Hz carrier.'],
-      [120, 127, '7 Hz comparison', 'Higher theta-range offset for a clearer slow pulse.'],
-      [120, 126, '6 Hz comparison', 'Middle theta-range offset with balanced movement.'],
+      [120, 124, 'Meditation 4 Hz', 'Lower theta offset with a comfortable 120 Hz carrier.'],
+      [120, 127, 'Gateway 7 Hz', 'Higher theta offset for clearer slow pulses.'],
+      [120, 126, 'Visualization 6 Hz', 'Balanced theta for creative, focused imagery.'],
     ],
   },
   alpha: {
-    title: 'Alpha offset',
-    desc: 'Moderate offsets commonly used for relaxed listening and steady wave comparison.',
+    title: 'Alpha - relaxation',
+    desc: 'Calm waking offsets for relaxed focus and gentle mental clarity.',
     presets: [
-      [120, 128, '8 Hz comparison', 'Entry into alpha-range offset with a low carrier.'],
-      [120, 130, '10 Hz comparison', 'Classic alpha-range offset for a clear beat envelope.'],
-      [120, 132, '12 Hz comparison', 'Upper alpha-range offset with more activity.'],
+      [120, 128, 'Soft Alpha 8 Hz', 'Relaxed alpha with a stable low carrier.'],
+      [120, 130, 'Calm 10 Hz', 'Classic alpha range for quiet alertness.'],
+      [120, 132, 'Bright Alpha 12 Hz', 'Clear alpha with a more active beat.'],
     ],
   },
   beta: {
-    title: 'Beta offset',
-    desc: 'Faster offsets for inspecting more active beat movement and denser visual patterns.',
+    title: 'Beta - focus',
+    desc: 'More active offsets for attention, productivity and mental alertness.',
     presets: [
-      [120, 136, '16 Hz comparison', 'Moderate beta-range offset.'],
-      [120, 138, '18 Hz comparison', 'Active offset with a clear envelope.'],
-      [120, 146, '26 Hz comparison', 'Higher beta-range offset.'],
+      [120, 136, 'Focus 16 Hz', 'Moderate beta for sustained concentration.'],
+      [120, 138, 'Work 18 Hz', 'Active beta for intense cognitive tasks.'],
+      [120, 146, 'Alert 26 Hz', 'Higher beta for vigilance and energy.'],
     ],
   },
   gamma: {
-    title: 'Gamma offset',
-    desc: 'High offsets can feel intense. Use conservative volume and treat these as technical comparisons.',
+    title: 'Gamma - alertness',
+    desc: 'High-frequency offsets for intense or experimental stimulation.',
     presets: [
-      [120, 160, '40 Hz comparison', '40 Hz offset with a low carrier.'],
-      [200, 240, 'Higher 40 Hz', 'Same offset with a higher carrier tone.'],
-      [432, 440, '432 / 440 reference', 'A musical 8 Hz offset between 432 Hz and 440 Hz.'],
+      [120, 160, 'Gamma 40 Hz', 'Low carrier gamma for a clearer beat.'],
+      [200, 240, 'High Gamma 40 Hz', 'Same beat with higher carrier frequencies.'],
+      [432, 440, '432 vs 440 - 8 Hz', 'Musical comparison between alternate and modern tuning references.'],
     ],
   },
 };
 
+let activeBand = 'theta';
 let running = true;
 let channelAMuted = false;
 let channelBMuted = false;
@@ -68,8 +70,6 @@ let gainB = null;
 let merger = null;
 let audioOn = false;
 let startTime = performance.now();
-let activeView = 'syncView';
-let patternDirty = true;
 
 function numberValue(id) {
   return parseFloat($(id).value);
@@ -82,15 +82,6 @@ function gcd(a, b) {
     [left, right] = [right, left % right];
   }
   return left || 1;
-}
-
-function bandName(beat) {
-  if (beat < 0.5) return 'Sub-delta';
-  if (beat < 4) return 'Delta';
-  if (beat < 8) return 'Theta';
-  if (beat < 13) return 'Alpha';
-  if (beat < 30) return 'Beta';
-  return 'Gamma';
 }
 
 function currentValues() {
@@ -107,7 +98,13 @@ function currentValues() {
   $('ratio').textContent = !channelAMuted && !channelBMuted
     ? `${Math.round(rawA * 10 / divisor)}:${Math.round(rawB * 10 / divisor)}`
     : '-';
-  $('state').textContent = !channelAMuted && !channelBMuted ? bandName(beat) : 'Muted channel';
+
+  if ($('mobileFAInput')) {
+    $('mobileFAInput').value = rawA;
+  }
+  if ($('mobileFBInput')) {
+    $('mobileFBInput').value = rawB;
+  }
 
   if (audioOn) {
     oscA.frequency.value = rawA;
@@ -117,41 +114,45 @@ function currentValues() {
   return { fA, fB, rawA, rawB, beat, carrier };
 }
 
-function markPatternsDirty() {
-  patternDirty = true;
+function renderPresetChips(bandKey) {
+  const band = bands[bandKey];
+  const row = $('presetChips');
+  const description = $('bandDescription');
+
+  if (!row || !description) return;
+
+  row.innerHTML = '';
+  description.textContent = band.desc;
+
+  band.presets.forEach((preset, index) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'preset-chip' + (index === 0 ? ' active' : '');
+    chip.innerHTML = `<strong>${preset[2]} - ${preset[0]} / ${preset[1]} Hz</strong><small>${preset[3]}</small>`;
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.preset-chip').forEach((button) => button.classList.remove('active'));
+      chip.classList.add('active');
+      $('fA').value = preset[0];
+      $('fB').value = preset[1];
+      currentValues();
+    });
+    row.appendChild(chip);
+  });
 }
 
 function renderBand(bandKey) {
   const band = bands[bandKey];
+  activeBand = bandKey;
+
   document.querySelectorAll('.band-btn').forEach((button) => {
     button.classList.toggle('active', button.dataset.band === bandKey);
   });
 
   $('bandTitle').textContent = band.title;
-  if ($('mobileHemiNow')) $('mobileHemiNow').textContent = band.title;
-  $('bandDescription').textContent = band.desc;
-  $('presetChips').innerHTML = '';
-
-  band.presets.forEach((preset, index) => {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = `preset-chip${index === 0 ? ' active' : ''}`;
-    chip.innerHTML = `<strong>${preset[2]} - ${preset[0]} / ${preset[1]} Hz</strong><small>${preset[3]}</small>`;
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.preset-chip').forEach((item) => item.classList.remove('active'));
-      chip.classList.add('active');
-      $('fA').value = preset[0];
-      $('fB').value = preset[1];
-      currentValues();
-      markPatternsDirty();
-    });
-    $('presetChips').appendChild(chip);
-  });
-
   $('fA').value = band.presets[0][0];
   $('fB').value = band.presets[0][1];
+  renderPresetChips(bandKey);
   currentValues();
-  markPatternsDirty();
 }
 
 function clearWave(context) {
@@ -198,305 +199,44 @@ function drawWavePanel(time, values) {
     context.stroke();
   };
 
-  if (!channelAMuted) draw('rgba(96,165,250,.95)', (t) => Math.sin(t * cyclesA * Math.PI * 2 - phase));
-  if (!channelBMuted) draw('rgba(244,114,182,.95)', (t) => Math.sin(t * cyclesB * Math.PI * 2 - phase * 1.01));
+  if (!channelAMuted) {
+    draw('rgba(255,100,100,0.8)', (t) => Math.sin(t * cyclesA * Math.PI * 2 + phase));
+  }
+  if (!channelBMuted) {
+    draw('rgba(100,100,255,0.8)', (t) => Math.sin(t * cyclesB * Math.PI * 2 + phase));
+  }
   if (!channelAMuted && !channelBMuted) {
-    draw('rgba(255,255,255,.9)', (t) => (
-      0.5 * Math.sin(t * cyclesA * Math.PI * 2 - phase)
-      + 0.5 * Math.sin(t * cyclesB * Math.PI * 2 - phase * 1.01)
-    ), 2.1);
-  }
-
-  context.fillStyle = 'rgba(255,255,255,.76)';
-  context.font = '18px system-ui';
-  context.fillText(`Beat frequency: ${values.beat.toFixed(2)} Hz`, 24, 38);
-}
-
-function drawBeatWave(time, values) {
-  const context = ctx.beatWave;
-  const { width, height } = context.canvas;
-  clearWave(context);
-
-  const amp = numberValue('waveAmp') * height * 0.28;
-  const visualScale = numberValue('waveSpeed');
-  const phase = time * visualScale * Math.PI * 2;
-  const cyclesA = Math.max(1, values.rawA) / 120;
-  const cyclesB = Math.max(1, values.rawB) / 120;
-  const envelopeSpeed = Math.max(0.2, values.beat / 4);
-
-  context.strokeStyle = 'rgba(255,255,255,.96)';
-  context.lineWidth = 2.1;
-  context.beginPath();
-  for (let x = 0; x < width; x += 1) {
-    const t = x / width;
-    const y1 = channelAMuted ? 0 : Math.sin(t * cyclesA * Math.PI * 2 - phase);
-    const y2 = channelBMuted ? 0 : Math.sin(t * cyclesB * Math.PI * 2 - phase * 1.01);
-    const divisor = !channelAMuted && !channelBMuted ? 0.5 : 1;
-    const y = height / 2 + (y1 + y2) * divisor * amp;
-    if (x === 0) context.moveTo(x, y);
-    else context.lineTo(x, y);
-  }
-  context.stroke();
-
-  context.strokeStyle = 'rgba(255,255,255,.32)';
-  context.lineWidth = 1.5;
-  context.setLineDash([6, 6]);
-  if (!channelAMuted && !channelBMuted) {
-    [-1, 1].forEach((sign) => {
-      context.beginPath();
-      for (let x = 0; x < width; x += 1) {
-        const t = x / width;
-        const env = Math.abs(Math.sin(t * envelopeSpeed * Math.PI * 2 - phase * 0.2));
-        const y = height / 2 + sign * env * amp;
-        if (x === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-      }
-      context.stroke();
-    });
-  }
-  context.setLineDash([]);
-}
-
-function drawLissajous(time, values) {
-  const context = ctx.lissajous;
-  const { width, height } = context.canvas;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = '#000';
-  context.fillRect(0, 0, width, height);
-  context.save();
-  context.translate(width / 2, height / 2);
-  context.strokeStyle = 'rgba(167,139,250,.9)';
-  context.lineWidth = 1.5;
-  context.beginPath();
-
-  const visualScale = numberValue('waveSpeed');
-  const phaseShift = time * visualScale;
-  const scale = numberValue('syncScale');
-
-  for (let i = 0; i <= 2400; i += 1) {
-    const t = (i / 2400) * Math.PI * 2 * 10;
-    const x = channelAMuted ? 0 : Math.sin(t * (values.rawA / 100) + phaseShift) * width * scale;
-    const y = channelBMuted ? 0 : Math.sin(t * (values.rawB / 100)) * height * scale;
-    if (i === 0) context.moveTo(x, y);
-    else context.lineTo(x, y);
-  }
-
-  context.stroke();
-  context.restore();
-}
-
-function drawMandala(time, values) {
-  const context = ctx.mandala;
-  const { width, height } = context.canvas;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = '#000';
-  context.fillRect(0, 0, width, height);
-  context.save();
-  context.translate(width / 2, height / 2);
-
-  const layers = numberValue('mandalaLayers');
-  const intensity = numberValue('mandalaIntensity');
-  const zoom = numberValue('mandalaZoom');
-  const visualScale = numberValue('waveSpeed');
-
-  for (let layer = 1; layer <= layers; layer += 1) {
-    const radius = layer * (Math.min(width, height) * 0.017) * zoom;
-    context.beginPath();
-    for (let a = 0; a <= 720; a += 1) {
-      const angle = (a / 720) * Math.PI * 2;
-      const mod = Math.sin(angle * (values.beat + 1) * layer + time * visualScale) * radius * intensity;
-      const r = radius + mod;
-      const x = Math.cos(angle) * r;
-      const y = Math.sin(angle) * r;
-      if (a === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
-    }
-    context.closePath();
-    context.strokeStyle = `hsla(${(layer * 18 + time * 30) % 360}, 80%, 70%, 0.55)`;
-    context.lineWidth = 1.1;
-    context.stroke();
-  }
-  context.restore();
-}
-
-function modeParams(freq, detail) {
-  const root = Math.sqrt(Math.max(1, freq));
-  return {
-    m: 1 + (Math.floor(root * 0.39) % detail),
-    n: 1 + (Math.floor(root * 0.63) % detail),
-    p: 1 + (Math.floor(root * 0.91) % detail),
-  };
-}
-
-function waveField(x, y, freq, detail) {
-  const { m, n, p } = modeParams(freq, detail);
-  const radial = Math.sqrt(x * x + y * y);
-  const damping = 1 - 0.22 * radial;
-  const plate = Math.sin(m * Math.PI * x) * Math.sin(n * Math.PI * y)
-    - Math.sin(n * Math.PI * x) * Math.sin(m * Math.PI * y);
-  const diagonal = 0.32 * Math.sin(p * Math.PI * (x + y));
-  return (plate + diagonal) * damping;
-}
-
-function drawPatternBorder(context) {
-  const { width, height } = context.canvas;
-  context.save();
-  context.strokeStyle = 'rgba(255,255,255,0.22)';
-  context.lineWidth = 2;
-  context.beginPath();
-  context.arc(width / 2, height / 2, Math.min(width, height) * 0.49, 0, Math.PI * 2);
-  context.stroke();
-  context.restore();
-}
-
-function clearPlate(context, label) {
-  const { width, height } = context.canvas;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = '#000';
-  context.fillRect(0, 0, width, height);
-  context.fillStyle = 'rgba(255,255,255,.55)';
-  context.font = '16px system-ui';
-  context.fillText(label, 18, 28);
-}
-
-function renderPattern(context, frequency) {
-  const { width, height } = context.canvas;
-  const image = context.createImageData(width, height);
-  const { data } = image;
-  const detail = numberValue('detail');
-  const thickness = numberValue('lineThickness');
-
-  for (let py = 0; py < height; py += 1) {
-    for (let px = 0; px < width; px += 1) {
-      const index = (py * width + px) * 4;
-      const x = (px / (width - 1)) * 2 - 1;
-      const y = (py / (height - 1)) * 2 - 1;
-      const r = Math.sqrt(x * x + y * y);
-
-      if (r > 0.985) {
-        data[index] = 0;
-        data[index + 1] = 0;
-        data[index + 2] = 0;
-        data[index + 3] = 255;
-        continue;
-      }
-
-      const field = waveField(x, y, frequency, detail);
-      const line = Math.max(0, 1 - Math.abs(field) / thickness);
-      const brightness = Math.max(0, Math.min(255, 8 + Math.pow(line, 0.38) * 247));
-      data[index] = brightness;
-      data[index + 1] = brightness;
-      data[index + 2] = brightness;
-      data[index + 3] = 255;
-    }
-  }
-
-  context.putImageData(image, 0, 0);
-  drawPatternBorder(context);
-  context.fillStyle = 'rgba(255,255,255,.78)';
-  context.font = '16px system-ui';
-  context.fillText(`${frequency.toFixed(1)} Hz`, 18, 28);
-}
-
-function drawActiveComplementaryView(time, values) {
-  if (activeView === 'syncView') {
-    drawLissajous(time, values);
-    return;
-  }
-
-  if (activeView === 'mandalaView') {
-    drawMandala(time, values);
-    return;
-  }
-
-  if (activeView === 'patternsView' && patternDirty) {
-    if (!channelAMuted) renderPattern(ctx.plateA, values.rawA);
-    else clearPlate(ctx.plateA, 'Channel A muted');
-    if (!channelBMuted) renderPattern(ctx.plateB, values.rawB);
-    else clearPlate(ctx.plateB, 'Channel B muted');
-    patternDirty = false;
+    draw('rgba(255,255,255,0.9)', (t) => {
+      const waveA = Math.sin(t * cyclesA * Math.PI * 2 + phase);
+      const waveB = Math.sin(t * cyclesB * Math.PI * 2 + phase);
+      return (waveA + waveB) / 2;
+    }, 1.8);
   }
 }
 
-function loop(now) {
-  if (running) {
-    const values = currentValues();
-    const time = (now - startTime) / 1000;
-    drawWavePanel(time, values);
-    drawBeatWave(time, values);
-    drawActiveComplementaryView(time, values);
-  }
+function loop(time) {
+  if (!running) return;
+  const values = currentValues();
+  drawWavePanel((time - startTime) / 1000, values);
   requestAnimationFrame(loop);
-}
-
-function bindEvents() {
-  document.querySelectorAll('.band-btn').forEach((button) => {
-    button.addEventListener('click', () => renderBand(button.dataset.band));
-  });
-
-  document.querySelectorAll('.visual-btn').forEach((button) => {
-    button.addEventListener('click', () => {
-      document.querySelectorAll('.visual-btn').forEach((item) => item.classList.remove('active'));
-      document.querySelectorAll('.visual-panel').forEach((panel) => panel.classList.remove('active'));
-      button.classList.add('active');
-      $(button.dataset.view).classList.add('active');
-      activeView = button.dataset.view;
-      markPatternsDirty();
-    });
-  });
-
-  ['fA', 'fB'].forEach((id) => $(id).addEventListener('input', () => {
-    currentValues();
-    markPatternsDirty();
-  }));
-  $('resetWaveSpeed').addEventListener('click', () => {
-    $('waveSpeed').value = 1;
-  });
-  const toggleVisuals = () => {
-    running = !running;
-    const label = running ? 'Pause Visuals' : 'Resume Visuals';
-    $('pauseVisualBtn').textContent = label;
-    if ($('mobilePauseVisualBtn')) $('mobilePauseVisualBtn').textContent = label;
-  };
-  $('pauseVisualBtn').addEventListener('click', toggleVisuals);
-  $('mobilePauseVisualBtn')?.addEventListener('click', toggleVisuals);
-  $('muteA').addEventListener('click', () => {
-    channelAMuted = !channelAMuted;
-    if (gainA) gainA.gain.value = channelAMuted ? 0.00001 : 0.035;
-    $('muteA').textContent = channelAMuted ? 'Enable Channel A' : 'Mute Channel A';
-    $('muteA').classList.toggle('paused', channelAMuted);
-    currentValues();
-    markPatternsDirty();
-  });
-  $('muteB').addEventListener('click', () => {
-    channelBMuted = !channelBMuted;
-    if (gainB) gainB.gain.value = channelBMuted ? 0.00001 : 0.035;
-    $('muteB').textContent = channelBMuted ? 'Enable Channel B' : 'Mute Channel B';
-    $('muteB').classList.toggle('paused', channelBMuted);
-    currentValues();
-    markPatternsDirty();
-  });
-  ['lineThickness', 'detail'].forEach((id) => $(id).addEventListener('input', markPatternsDirty));
-  $('audioBtn').addEventListener('click', toggleAudio);
-  $('mobileAudioPlayBtn')?.addEventListener('click', startAudio);
-  $('mobileAudioStopBtn')?.addEventListener('click', stopAudio);
 }
 
 async function startAudio() {
   if (audioOn) return;
   audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const values = currentValues();
   oscA = audioContext.createOscillator();
   oscB = audioContext.createOscillator();
   gainA = audioContext.createGain();
   gainB = audioContext.createGain();
   merger = audioContext.createChannelMerger(2);
+
   oscA.type = 'sine';
   oscB.type = 'sine';
-  oscA.frequency.value = values.rawA;
-  oscB.frequency.value = values.rawB;
-  gainA.gain.value = channelAMuted ? 0.00001 : 0.035;
-  gainB.gain.value = channelBMuted ? 0.00001 : 0.035;
+  oscA.frequency.value = parseFloat($('fA').value);
+  oscB.frequency.value = parseFloat($('fB').value);
+  gainA.gain.value = channelAMuted ? 0 : 0.1;
+  gainB.gain.value = channelBMuted ? 0 : 0.1;
+
   oscA.connect(gainA).connect(merger, 0, 0);
   oscB.connect(gainB).connect(merger, 0, 1);
   merger.connect(audioContext.destination);
@@ -525,7 +265,70 @@ async function toggleAudio() {
   else await startAudio();
 }
 
+function toggleMute(channel) {
+  if (channel === 'A') {
+    channelAMuted = !channelAMuted;
+    $('muteA').classList.toggle('active', channelAMuted);
+    if (audioOn) gainA.gain.value = channelAMuted ? 0 : 0.1;
+  } else {
+    channelBMuted = !channelBMuted;
+    $('muteB').classList.toggle('active', channelBMuted);
+    if (audioOn) gainB.gain.value = channelBMuted ? 0 : 0.1;
+  }
+  currentValues();
+}
 
-bindEvents();
-renderBand('theta');
-requestAnimationFrame(loop);
+function pauseVisuals() {
+  running = !running;
+  $('pauseVisualBtn').textContent = running ? 'Pause Visuals' : 'Resume Visuals';
+  if (running) requestAnimationFrame(loop);
+}
+
+function resetWaveSpeed() {
+  $('waveSpeed').value = 1;
+}
+
+function bindEvents() {
+  $('audioBtn').addEventListener('click', toggleAudio);
+  $('pauseVisualBtn').addEventListener('click', pauseVisuals);
+  $('muteA').addEventListener('click', () => toggleMute('A'));
+  $('muteB').addEventListener('click', () => toggleMute('B'));
+
+  $('fA').addEventListener('input', currentValues);
+  $('fB').addEventListener('input', currentValues);
+
+  $('waveSpeed').addEventListener('input', currentValues);
+  $('waveAmp').addEventListener('input', currentValues);
+  $('resetWaveSpeed').addEventListener('click', () => {
+    resetWaveSpeed();
+    currentValues();
+  });
+
+  document.querySelectorAll('.band-btn').forEach((button) => {
+    button.addEventListener('click', () => renderBand(button.dataset.band));
+  });
+
+  $('mobileAudioPlayBtn').addEventListener('click', toggleAudio);
+  $('mobileAudioStopBtn').addEventListener('click', stopAudio);
+  $('mobilePauseVisualBtn').addEventListener('click', pauseVisuals);
+
+  if ($('mobileFAInput')) {
+    $('mobileFAInput').addEventListener('input', (event) => {
+      $('fA').value = event.target.value;
+      currentValues();
+    });
+  }
+  if ($('mobileFBInput')) {
+    $('mobileFBInput').addEventListener('input', (event) => {
+      $('fB').value = event.target.value;
+      currentValues();
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initI18n();
+  bindEvents();
+  renderBand(activeBand);
+  requestAnimationFrame(loop);
+});
