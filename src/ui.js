@@ -94,13 +94,12 @@ function bindStaticControls(actions) {
   $('mobilePlayBtn').addEventListener('click', actions.play);
   $('stopBtn').addEventListener('click', actions.stop);
   $('mobileStopBtn').addEventListener('click', actions.stop);
+  $('mobileRandomBtn').addEventListener('click', () => randomizeChord(actions));
 
   $('listen432Visual').addEventListener('click', () => actions.setBase(432));
   $('listen440Visual').addEventListener('click', () => actions.setBase(440));
   $('listen432Plate').addEventListener('click', () => actions.setBase(432));
   $('listen440Plate').addEventListener('click', () => actions.setBase(440));
-  $('mobile432Btn').addEventListener('click', () => actions.setBase(432));
-  $('mobile440Btn').addEventListener('click', () => actions.setBase(440));
 
   $('volume').addEventListener('input', () => actions.setVolume(parseFloat($('volume').value)));
   $('waveform').addEventListener('change', actions.replayIfNeeded);
@@ -109,15 +108,7 @@ function bindStaticControls(actions) {
     $('visualSpeed').value = 1;
     markNodalDirty();
   });
-  $('randomChord').addEventListener('click', () => {
-    const randomRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
-    const randomChord = CHORD_KEYS[Math.floor(Math.random() * CHORD_KEYS.length)];
-    setState({ root: randomRoot, chord: randomChord });
-    markNodalDirty();
-    syncControls();
-    updateUI();
-    actions.play();
-  });
+  $('randomChord').addEventListener('click', () => randomizeChord(actions));
 }
 
 export function getPlaybackSettings() {
@@ -183,10 +174,20 @@ function updateNoteTable() {
 }
 
 function setActiveBase(base) {
-  ['listen432Visual', 'listen432Plate', 'mobile432Btn'].forEach((id) => {
+  ['listen432Visual', 'listen432Plate'].forEach((id) => {
     $(id)?.classList.toggle('active', base === 432);
   });
-  ['listen440Visual', 'listen440Plate', 'mobile440Btn'].forEach((id) => {
+  ['listen440Visual', 'listen440Plate'].forEach((id) => {
     $(id)?.classList.toggle('active', base === 440);
   });
+}
+
+function randomizeChord(actions) {
+  const randomRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+  const randomChord = CHORD_KEYS[Math.floor(Math.random() * CHORD_KEYS.length)];
+  setState({ root: randomRoot, chord: randomChord });
+  markNodalDirty();
+  syncControls();
+  updateUI();
+  actions.play();
 }
