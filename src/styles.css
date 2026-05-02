@@ -146,18 +146,42 @@ canvas.tall {
 
 .language-switch {
   display: flex;
-  gap: 0.45rem;
-  flex-wrap: wrap;
+  align-self: flex-start;
+  gap: 0.12rem;
+  padding: 0.16rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(2, 6, 23, 0.46);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .language-switch.compact {
+  justify-self: end;
   justify-content: flex-end;
 }
 
-.language-switch.compact button {
-  min-height: 36px;
-  padding: 0.45rem 0.7rem;
-  font-size: 0.8rem;
+.language-switch button {
+  min-width: 2.35rem;
+  min-height: 1.9rem;
+  padding: 0.28rem 0.58rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.language-switch button:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.language-switch button.active {
+  color: #04111f;
+  background: linear-gradient(135deg, var(--green), var(--blue)) !important;
+  box-shadow: 0 6px 16px rgba(52, 211, 153, 0.18);
 }
 
 .app {
