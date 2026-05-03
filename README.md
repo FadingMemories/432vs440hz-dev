@@ -4,6 +4,10 @@ Static, English-first educational web app for comparing 432 Hz and 440 Hz tuning
 
 It also includes a separate Hemi Sync page for exploring stereo tone offsets, beat frequency, hemispheric synchronization concepts and generative wave patterns without overloading the main comparator interface.
 
+## 🌐 Live Demo
+
+Visit the live application at **[432vs440hz.com](https://432vs440hz.com/)**
+
 ## Project Structure
 
 ```text
