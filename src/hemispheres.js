@@ -13,47 +13,51 @@ const ctx = {
 const bands = {
   delta: {
     title: 'Delta - deep rest',
-    desc: 'Very slow offsets for deep relaxation and rest-oriented exploration.',
+    desc: 'Fundamental-adjacent carriers near 90 / 120 / 150 optimized for smoother harmonic relationships and reduced fatigue.',
     presets: [
-      [100, 102, 'Low Rest 2 Hz', 'Low carrier with a very slow delta offset.'],
-      [120, 123, 'Soft Delta 3 Hz', 'Mid carrier for gentle deep-rest exploration.'],
-      [150, 153, 'Deep Recovery 3 Hz', 'Higher carrier with a stable slow delta pulse.'],
+      [96, 99, 'Deep Rest 3 Hz', 'Near-ideal low carrier with highly stable restorative pulse.'],
+      [117, 120, 'Balanced Delta 3 Hz', 'Close to 120 target with smoother resonance behavior.'],
+      [144, 147, 'Bright Delta 3 Hz', 'Near 150 class but cleaner harmonic structure.'],
     ],
   },
+
   theta: {
     title: 'Theta - meditation',
-    desc: 'Medium-slow offsets for meditation, creativity and internal visualization.',
+    desc: 'Meditative presets using nearby harmonic sweet spots rather than arbitrary round numbers.',
     presets: [
-      [100, 104, 'Low Theta 4 Hz', 'Low carrier with a soft theta offset.'],
-      [120, 127, 'Gateway 7 Hz', 'Mid carrier with clearer slow pulses.'],
-      [150, 156, 'Visualization 6 Hz', 'Higher carrier for a brighter theta comparison.'],
+      [96, 101, 'Grounding Theta 5 Hz', 'Low stable theta with soft perceptual load.'],
+      [117, 123, 'Gateway Theta 6 Hz', 'Optimized mid-band meditation preset.'],
+      [144, 151, 'Vision Theta 7 Hz', 'Bright but coherent visualization-focused theta.'],
     ],
   },
+
   alpha: {
     title: 'Alpha - relaxation',
-    desc: 'Calm waking offsets for relaxed focus and gentle mental clarity.',
+    desc: 'Relaxation presets centered on stronger nearby fundamentals for stability and comfort.',
     presets: [
-      [100, 108, 'Soft Alpha 8 Hz', 'Low carrier with a relaxed alpha beat.'],
-      [120, 130, 'Calm 10 Hz', 'Mid carrier for quiet alertness.'],
-      [150, 162, 'Bright Alpha 12 Hz', 'Higher carrier with a clearer active beat.'],
+      [108, 116, 'Soft Alpha 8 Hz', 'Warm, highly sustainable alpha relaxation.'],
+      [117, 125, 'Balanced Alpha 8 Hz', 'Near-120 harmonic optimization.'],
+      [144, 154, 'Bright Alpha 10 Hz', 'Clearer cognitive freshness with better resonance.'],
     ],
   },
+
   beta: {
     title: 'Beta - focus',
-    desc: 'More active offsets for attention, productivity and mental alertness.',
+    desc: 'Focus-oriented carriers adjusted toward cleaner structural frequency anchors.',
     presets: [
-      [100, 116, 'Focus 16 Hz', 'Low carrier with a moderate beta offset.'],
-      [120, 138, 'Work 18 Hz', 'Mid carrier for active comparison.'],
-      [150, 176, 'Alert 26 Hz', 'Higher carrier with a stronger beta offset.'],
+      [108, 122, 'Gentle Focus 14 Hz', 'Productive beta with lower fatigue.'],
+      [126, 142, 'Work Beta 16 Hz', 'Strong attentional pacing near ideal beta fundamentals.'],
+      [144, 162, 'Sharp Focus 18 Hz', 'High-performance focus with stable energetic structure.'],
     ],
   },
+
   gamma: {
     title: 'Gamma - alertness',
-    desc: 'High-frequency offsets for intense or experimental stimulation.',
+    desc: 'Experimental gamma presets using nearby structural anchors to reduce excessive harshness.',
     presets: [
-      [100, 140, 'Low Gamma 40 Hz', 'Low carrier gamma for a clear fast beat.'],
-      [120, 160, 'Gamma 40 Hz', 'Mid carrier with the same fast offset.'],
-      [150, 190, 'High Gamma 40 Hz', 'Higher carrier for a brighter gamma comparison.'],
+      [108, 144, 'Soft Gamma 36 Hz', 'Lower-stress gamma with strong clarity.'],
+      [126, 166, 'Balanced Gamma 40 Hz', 'Mid gamma with improved harmonic spread.'],
+      [144, 188, 'Bright Gamma 44 Hz', 'High-energy preset using cleaner upper structure.'],
     ],
   },
 };
@@ -288,13 +292,24 @@ async function toggleAudio() {
   else await startAudio();
 }
 
+function setMuteButtonState(channel, muted) {
+  const desktopButton = $(channel === 'A' ? 'muteA' : 'muteB');
+  const mobileButton = $(channel === 'A' ? 'mobileMuteA' : 'mobileMuteB');
+  const mobileLabel = muted ? 'Unmute' : 'Mute';
+  if (desktopButton) desktopButton.classList.toggle('active', muted);
+  if (mobileButton) {
+    mobileButton.textContent = mobileLabel;
+    mobileButton.classList.toggle('active', muted);
+  }
+}
+
 function toggleMute(channel) {
   if (channel === 'A') {
     channelAMuted = !channelAMuted;
-    $('muteA').classList.toggle('active', channelAMuted);
+    setMuteButtonState('A', channelAMuted);
   } else {
     channelBMuted = !channelBMuted;
-    $('muteB').classList.toggle('active', channelBMuted);
+    setMuteButtonState('B', channelBMuted);
   }
   updateGains();
   renderStillWave();
@@ -315,10 +330,34 @@ function bindEvents() {
   $('pauseVisualBtn').addEventListener('click', pauseVisuals);
   $('muteA').addEventListener('click', () => toggleMute('A'));
   $('muteB').addEventListener('click', () => toggleMute('B'));
+  $('mobileMuteA')?.addEventListener('click', () => toggleMute('A'));
+  $('mobileMuteB')?.addEventListener('click', () => toggleMute('B'));
 
   $('fA').addEventListener('input', renderStillWave);
   $('fB').addEventListener('input', renderStillWave);
-  $('masterVolume').addEventListener('input', updateGains);
+
+  const masterVolumeInput = $('masterVolume');
+  const mobileMasterVolumeInput = $('mobileMasterVolume');
+
+  function syncMasterVolume(value) {
+    if (masterVolumeInput) masterVolumeInput.value = value;
+    if (mobileMasterVolumeInput) mobileMasterVolumeInput.value = value;
+    updateGains();
+  }
+
+  if (masterVolumeInput) {
+    masterVolumeInput.addEventListener('input', (event) => {
+      if (mobileMasterVolumeInput) mobileMasterVolumeInput.value = event.target.value;
+      updateGains();
+    });
+  }
+
+  if (mobileMasterVolumeInput) {
+    mobileMasterVolumeInput.addEventListener('input', (event) => {
+      if (masterVolumeInput) masterVolumeInput.value = event.target.value;
+      updateGains();
+    });
+  }
 
   $('waveSpeed').addEventListener('input', renderStillWave);
   $('waveAmp').addEventListener('input', renderStillWave);

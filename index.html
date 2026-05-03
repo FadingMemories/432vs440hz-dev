@@ -130,17 +130,6 @@
   </header>
 
   <main class="app" id="main">
-    <div class="top-dock" aria-label="Quick controls">
-      <div class="dock-row three">
-        <select id="mobileRootSelect" aria-label="Root note"></select>
-        <select id="mobileChordSelect" aria-label="Chord type"></select>
-        <div class="language-switch compact" aria-label="Language selector">
-          <button type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
-          <button type="button" data-language-switch="es" data-i18n="languageES">ES</button>
-        </div>
-      </div>
-    </div>
-
     <section class="card mobile-page-intro" aria-label="Comparator introduction">
             <p class="eyebrow" data-i18n="eyebrow">Educational audio comparator</p>
       <p class="mobile-title" data-i18n="appTitle">432 vs 440 Hz Comparator</p>
@@ -338,6 +327,26 @@
   </main>
 
   <div class="bottom-dock" aria-label="Mobile playback controls">
+      <div class="dock-row two">
+        <div class="bottom-field">
+          <label>
+            <span data-i18n="rootNoteLabel">Root Note</span>
+            <select id="mobileRootSelect" aria-label="Root note"></select>
+          </label>
+        </div>
+        <div class="bottom-field">
+          <label>
+            <span>Chord</span>
+            <select id="mobileChordSelect" aria-label="Chord type"></select>
+          </label>
+        </div>
+      </div>
+      <div class="dock-row">
+        <label class="bottom-volume" aria-label="Master volume">
+          <span data-i18n="masterVolumeLabel">Master Volume</span>
+          <input id="mobileVolume" type="range" min="0" max="0.4" step="0.01" value="0.32">
+        </label>
+      </div>
       <div class="dock-row three">
         <button class="primary" type="button" id="mobilePlayBtn" data-i18n="mobilePlayBtn">Play</button>
         <button class="ghost" type="button" id="mobileStopBtn" data-i18n="stopBtn">Stop</button>

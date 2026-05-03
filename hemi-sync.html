@@ -21,7 +21,6 @@
   <meta property="og:image:alt" content="Hemi Sync interface with stereo wave and geometric pattern canvases">
   <meta property="og:site_name" content="432 vs 440 Hz Comparator">
   <meta property="og:locale" content="en_US">
-
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Hemi Sync Visualizer">
   <meta name="twitter:description" content="Explore stereo beat frequency concepts with two-channel tone controls, presets and educational wave visualization.">
@@ -129,30 +128,12 @@
   </header>
 
   <main class="app hemi-shell" id="main">
-    <div class="top-dock" aria-label="Quick controls">
-      <div class="dock-row three">
-        <label class="top-input">
-          <span>Left Hz</span>
-          <input id="mobileFAInput" type="number" min="20" max="2000" step="1" value="120" aria-label="Left channel frequency">
-        </label>
-        <label class="top-input">
-          <span>Right Hz</span>
-          <input id="mobileFBInput" type="number" min="20" max="2000" step="1" value="124" aria-label="Right channel frequency">
-        </label>
-        <nav class="language-switch compact" aria-label="Language selector">
-          <button type="button" data-language-switch="en" data-i18n="languageEN">EN</button>
-          <button type="button" data-language-switch="es" data-i18n="languageES">ES</button>
-        </nav>
-      </div>
-    </div>
-
     <section class="card mobile-page-intro" aria-label="Hemi Sync introduction">
-      <p class="eyebrow">Stereo beat synchronization</p>
+      <p class="eyebrow">Brain Hemisphere synchronization</p>
       <p class="mobile-title">Hemi Sync</p>
       <p class="intro">
         Explore the Hemi Sync technique through two stereo tones, the perceived beat created by their difference,
-        and visual models of phase relationship and hemispheric synchronization. This is an educational audio
-        visualization tool for exploring stereo beat frequency concepts.
+        and visual models of phase relationship and hemispheric synchronization. 
       </p>
       <div class="mobile-intro-meta">
         <nav class="tool-nav compact" aria-label="Tools">
@@ -160,6 +141,26 @@
           <a class="active" href="hemi-sync.html">Hemi Sync</a>
         </nav>
       </div>
+    </section>
+
+    <section class="visuals hemi-visuals" aria-label="Wave visualization">
+      <article class="card canvas-card">
+        <div class="visual-toolbar">
+          <h2>Wave Movement</h2>
+        </div>
+        <p class="intro">Stereo wave movement visualization showing both channels and their combined pattern.</p>
+        <canvas id="waves" width="1200" height="540" role="img" aria-label="Stereo wave movement visualization"></canvas>
+        <div class="hemi-settings">
+          <label>Visual time scale
+            <input id="waveSpeed" type="range" min="0.25" max="4" step="0.05" value="4">
+          </label>
+          <button class="ghost mini-btn" type="button" id="resetWaveSpeed">Reset</button>
+          <label>Wave and beat amplitude
+            <input id="waveAmp" type="range" min="0.2" max="1" step="0.01" value="0.8">
+          </label>
+        </div>
+        <p class="hint">The wave panel shows both channels and their combined movement. It is a visual guide, not a measurement instrument.</p>
+      </article>
     </section>
 
     <section class="card section hemi-control-strip" aria-label="Sound controls">
@@ -172,7 +173,7 @@
       </div>
 
       <div class="hemi-frequency-grid">
-        <label>Master Volume
+        <label class="master-volume-control">Master Volume
           <input id="masterVolume" type="range" min="0" max="0.2" step="0.005" value="0.08">
         </label>
         <div class="hemi-field-grid">
@@ -229,26 +230,6 @@
         </div>
       </section>
 
-      <section class="visuals hemi-visuals" aria-label="Wave visualization">
-        <article class="card canvas-card">
-          <div class="visual-toolbar">
-            <h2>Wave Movement</h2>
-          </div>
-          <p class="intro">Stereo wave movement visualization showing both channels and their combined pattern.</p>
-          <canvas id="waves" width="1200" height="540" role="img" aria-label="Stereo wave movement visualization"></canvas>
-          <div class="hemi-settings">
-            <label>Visual time scale
-              <input id="waveSpeed" type="range" min="0.25" max="4" step="0.05" value="4">
-            </label>
-            <button class="ghost mini-btn" type="button" id="resetWaveSpeed">Reset</button>
-            <label>Wave and beat amplitude
-              <input id="waveAmp" type="range" min="0.2" max="1" step="0.01" value="0.8">
-            </label>
-          </div>
-          <p class="hint">The wave panel shows both channels and their combined movement. It is a visual guide, not a measurement instrument.</p>
-        </article>
-      </section>
-
       <section class="info-hub hemi-info-hub" aria-label="Hemi Sync educational reference">
         <article class="card info-card">
           <h2>What You're Seeing</h2>
@@ -278,6 +259,28 @@
   </main>
 
   <div class="bottom-dock" aria-label="Mobile playback controls">
+    <div class="dock-row two">
+      <div class="bottom-input">
+        <label>
+          <span>Left Hz</span>
+          <input id="mobileFAInput" type="number" min="20" max="2000" step="1" value="120" aria-label="Left channel frequency">
+        </label>
+        <button class="ghost mini-btn" type="button" id="mobileMuteA">Mute</button>
+      </div>
+      <div class="bottom-input">
+        <label>
+          <span>Right Hz</span>
+          <input id="mobileFBInput" type="number" min="20" max="2000" step="1" value="124" aria-label="Right channel frequency">
+        </label>
+        <button class="ghost mini-btn" type="button" id="mobileMuteB">Mute</button>
+      </div>
+    </div>
+    <div class="dock-row">
+      <label class="bottom-volume" aria-label="Master volume">
+        <span>Master Volume</span>
+        <input id="mobileMasterVolume" type="range" min="0" max="0.2" step="0.005" value="0.08">
+      </label>
+    </div>
     <div class="dock-row three">
       <button class="primary" type="button" id="mobileAudioPlayBtn">Play</button>
       <button class="ghost" type="button" id="mobileAudioStopBtn">Stop</button>

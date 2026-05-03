@@ -105,7 +105,27 @@ function bindStaticControls(actions) {
   $('listen432Plate').addEventListener('click', () => actions.setBase(432));
   $('listen440Plate').addEventListener('click', () => actions.setBase(440));
 
-  $('volume').addEventListener('input', () => actions.setVolume(parseFloat($('volume').value)));
+  const volumeSlider = $('volume');
+  const mobileVolumeSlider = $('mobileVolume');
+
+  function syncVolume(value) {
+    if (volumeSlider) volumeSlider.value = value;
+    if (mobileVolumeSlider) mobileVolumeSlider.value = value;
+    actions.setVolume(value);
+  }
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', (event) => {
+      syncVolume(parseFloat(event.target.value));
+    });
+  }
+
+  if (mobileVolumeSlider) {
+    mobileVolumeSlider.addEventListener('input', (event) => {
+      syncVolume(parseFloat(event.target.value));
+    });
+  }
+
   $('waveform').addEventListener('change', actions.replayIfNeeded);
   $('visualSpeed').addEventListener('input', markNodalDirty);
   $('resetSpeed').addEventListener('click', () => {
