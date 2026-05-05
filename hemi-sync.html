@@ -118,13 +118,13 @@
         and visual models of phase relationship and hemispheric synchronization.
       </p>
       <nav class="tool-nav" aria-label="Tools">
-        <a href="index.html" data-tool-icon="tuning">
+        <a href="/" data-tool-icon="tuning">
           <strong>432 / 440 Comparator</strong>
           <span data-i18n="toolComparatorDesc">Tuning, chords and nodal patterns</span>
         </a>
         <a class="active" href="hemi-sync.html" aria-current="page" data-tool-icon="hemi">
           <strong>Hemi Sync</strong>
-          <span data-i18n="toolHemiDesc">Stereo beat frequency tool</span>
+          <span data-i18n="toolHemiDesc">Hemispheric brain synchronization</span>
         </a>
       </nav>
     </div>
@@ -144,7 +144,7 @@
       </p>
       <div class="mobile-intro-meta">
         <nav class="tool-nav compact" aria-label="Tools">
-          <a href="index.html" data-tool-icon="tuning">
+          <a href="/" data-tool-icon="tuning">
             <strong>Comparator</strong>
           </a>
           <a class="active" href="hemi-sync.html" aria-current="page" data-tool-icon="hemi">
@@ -316,6 +316,21 @@
       <button class="primary" type="button" id="mobileAudioPlayBtn" aria-label="Play/Stop" data-action-icon="play">Play</button>
       <button class="secondary" type="button" id="mobilePauseVisualBtn" data-action-icon="pause">Pause Visuals</button>
     </div>
+  </div>
+
+  <div class="tutorial-overlay" id="hemiTutorialOverlay" aria-hidden="true">
+    <div class="tutorial-spotlight" id="hemiTutorialSpotlight"></div>
+    <section class="tutorial-coach" role="status" aria-live="polite" aria-labelledby="hemiTutorialTitle" aria-describedby="hemiTutorialText">
+      <div class="tutorial-progress" aria-label="Hemi Sync tutorial progress">
+        <span class="tutorial-dot active" data-hemi-tutorial-dot="0"></span>
+        <span class="tutorial-dot" data-hemi-tutorial-dot="1"></span>
+        <span class="tutorial-dot" data-hemi-tutorial-dot="2"></span>
+      </div>
+      <p class="eyebrow" id="hemiTutorialEyebrow">First steps</p>
+      <h2 id="hemiTutorialTitle">Press Play</h2>
+      <p class="intro" id="hemiTutorialText">These two frequencies play through separate channels. Press Play to hear how their difference creates the perceived beat.</p>
+      <p class="tutorial-hint" id="hemiTutorialHint">Press the highlighted control to continue.</p>
+    </section>
   </div>
 
   <script type="module" src="src/hemispheres.js"></script>

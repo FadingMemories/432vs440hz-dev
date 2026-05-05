@@ -409,6 +409,12 @@ button[data-action-icon="reset"]::before { content: "\21BA"; }
   gap: 0.6rem;
 }
 
+.grid2 > .primary,
+.grid2 > .secondary {
+  min-height: 58px;
+  white-space: nowrap;
+}
+
 .chords {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

@@ -368,6 +368,158 @@ function pauseVisuals() {
   if (running && audioOn) requestAnimationFrame(loop);
 }
 
+function getFirstVisibleElement(selectors) {
+  for (const selector of selectors) {
+    const candidates = document.querySelectorAll(selector);
+    for (const candidate of candidates) {
+      const rect = candidate.getBoundingClientRect();
+      const style = window.getComputedStyle(candidate);
+      if (
+        rect.width > 0
+        && rect.height > 0
+        && style.display !== 'none'
+        && style.visibility !== 'hidden'
+      ) {
+        return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+function initHemiTutorial() {
+  if (isMobileLayout()) return;
+
+  const overlay = $('hemiTutorialOverlay');
+  const coach = document.querySelector('#hemiTutorialOverlay .tutorial-coach');
+  const spotlight = $('hemiTutorialSpotlight');
+  const eyebrow = $('hemiTutorialEyebrow');
+  const title = $('hemiTutorialTitle');
+  const text = $('hemiTutorialText');
+  const hint = $('hemiTutorialHint');
+  if (!overlay || !coach || !spotlight || !eyebrow || !title || !text || !hint) return;
+
+  const storageKey = '432vs440hz:hemiTutorialSeen:v1';
+  const steps = [
+    {
+      title: () => t('hemiTutorialPlayTitle'),
+      text: () => t('hemiTutorialPlayText'),
+      getTarget: () => getFirstVisibleElement(['.hemi-frequency-grid', '#audioBtn']),
+      isMatch: (target) => Boolean(target.closest?.('#audioBtn')),
+    },
+    {
+      title: () => t('hemiTutorialCategoryTitle'),
+      text: () => t('hemiTutorialCategoryText'),
+      getTarget: () => getFirstVisibleElement(['.hemi-band-grid']),
+      isMatch: (target) => Boolean(target.closest?.('.band-btn')),
+    },
+    {
+      title: () => t('hemiTutorialPresetTitle'),
+      text: () => t('hemiTutorialPresetText'),
+      getTarget: () => getFirstVisibleElement(['#presetChips']),
+      isMatch: (target) => Boolean(target.closest?.('.preset-chip')),
+    },
+  ];
+  let currentStep = 0;
+
+  const hasSeenTutorial = () => {
+    try {
+      return localStorage.getItem(storageKey) === 'true';
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const markSeen = () => {
+    try {
+      localStorage.setItem(storageKey, 'true');
+    } catch (error) {
+      // Storage can be blocked; the guided session still works.
+    }
+  };
+
+  const clamp = (value, min, max) => {
+    if (max < min) return min;
+    return Math.min(Math.max(value, min), max);
+  };
+
+  const positionTutorial = () => {
+    const target = steps[currentStep]?.getTarget();
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+    const padding = 8;
+    spotlight.style.top = `${rect.top - padding}px`;
+    spotlight.style.left = `${rect.left - padding}px`;
+    spotlight.style.width = `${rect.width + padding * 2}px`;
+    spotlight.style.height = `${rect.height + padding * 2}px`;
+
+    const coachRect = coach.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const gap = 14;
+    const left = clamp(
+      rect.left + rect.width / 2 - coachRect.width / 2,
+      12,
+      viewportWidth - coachRect.width - 12
+    );
+    let top = rect.bottom + gap;
+    if (top + coachRect.height > viewportHeight - 12) {
+      top = rect.top - coachRect.height - gap;
+    }
+    coach.style.left = `${left}px`;
+    coach.style.top = `${Math.max(12, top)}px`;
+  };
+
+  function renderStep() {
+    const step = steps[currentStep];
+    eyebrow.textContent = t('hemiTutorialEyebrow');
+    hint.textContent = t('hemiTutorialHint');
+    title.textContent = step.title();
+    text.textContent = step.text();
+    document.querySelectorAll('[data-hemi-tutorial-dot]').forEach((dot) => {
+      dot.classList.toggle('active', Number(dot.dataset.hemiTutorialDot) === currentStep);
+    });
+    step.getTarget()?.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+    positionTutorial();
+    window.setTimeout(positionTutorial, 260);
+  }
+
+  const closeTutorial = () => {
+    markSeen();
+    overlay.classList.remove('is-visible');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('click', handleTutorialAction, true);
+    document.removeEventListener('input', handleTutorialAction, true);
+    window.removeEventListener('resize', positionTutorial);
+    window.removeEventListener('scroll', positionTutorial, true);
+    window.removeEventListener('languagechange', renderStep);
+  };
+
+  if (hasSeenTutorial()) return;
+
+  function handleTutorialAction(event) {
+    const step = steps[currentStep];
+    if (!step?.isMatch(event.target, event.type)) return;
+
+    currentStep += 1;
+    if (currentStep >= steps.length) {
+      closeTutorial();
+      return;
+    }
+    renderStep();
+  }
+
+  overlay.classList.add('is-visible');
+  overlay.setAttribute('aria-hidden', 'false');
+  renderStep();
+  document.addEventListener('click', handleTutorialAction, true);
+  document.addEventListener('input', handleTutorialAction, true);
+  window.addEventListener('resize', positionTutorial);
+  window.addEventListener('scroll', positionTutorial, true);
+  window.addEventListener('languagechange', renderStep);
+}
+
 function bindEvents() {
   $('audioBtn').addEventListener('click', toggleAudio);
   $('pauseVisualBtn').addEventListener('click', pauseVisuals);
@@ -443,4 +595,5 @@ document.addEventListener('DOMContentLoaded', () => {
   updateAudioButtonText();
   updateVisualButtonText();
   renderStillWave();
+  initHemiTutorial();
 });
