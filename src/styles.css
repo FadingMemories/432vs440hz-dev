@@ -1147,7 +1147,7 @@ button[data-action-icon="reset"]::before { content: "\21BA"; }
 }
 
 .mobile-band-presets {
-  display: none;
+  display: none !important;
   grid-column: 1 / -1;
 }
 
@@ -1198,7 +1198,7 @@ button[data-action-icon="reset"]::before { content: "\21BA"; }
   }
 
   .mobile-band-presets {
-    display: grid;
+    display: grid !important;
     gap: 0.42rem;
     margin: -0.15rem 0 0.7rem 0.72rem;
     padding: 0.15rem 0 0.2rem 0.72rem;

@@ -75,6 +75,10 @@ let merger = null;
 let audioOn = false;
 let startTime = performance.now();
 
+function isMobileLayout() {
+  return window.matchMedia('(max-width: 720px)').matches;
+}
+
 function updateAudioButtonText() {
   const label = audioOn ? t('stopBtn') : t('mobilePlayBtn');
   ['audioBtn', 'mobileAudioPlayBtn'].forEach((id) => {
@@ -190,7 +194,7 @@ function renderPresetChips(bandKey) {
 
   band.presets.forEach((preset, index) => {
     row.appendChild(createPresetChip(preset, index));
-    if (mobileRow) mobileRow.appendChild(createPresetChip(preset, index, true));
+    if (mobileRow && isMobileLayout()) mobileRow.appendChild(createPresetChip(preset, index, true));
   });
 }
 
@@ -204,7 +208,7 @@ function renderBand(bandKey) {
 
   const mobileRow = $('mobilePresetChips');
   const activeButton = document.querySelector(`.band-btn[data-band="${bandKey}"]`);
-  if (mobileRow && activeButton) {
+  if (mobileRow && activeButton && isMobileLayout()) {
     activeButton.insertAdjacentElement('afterend', mobileRow);
   }
 
