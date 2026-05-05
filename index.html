@@ -120,8 +120,14 @@
         harmonic geometry and cymatics-inspired visual models.
       </p>
       <nav class="tool-nav" aria-label="Tools">
-        <a class="active" href="index.html">432 / 440 Comparator</a>
-        <a href="hemi-sync.html">Hemi Sync</a>
+        <a class="active" href="index.html" aria-current="page" data-tool-icon="tuning">
+          <strong>432 / 440 Comparator</strong>
+          <span>Tuning, chords and nodal patterns</span>
+        </a>
+        <a href="hemi-sync.html" data-tool-icon="hemi">
+          <strong>Hemi Sync</strong>
+          <span>Stereo beat frequency tool</span>
+        </a>
       </nav>
     </div>
     <nav class="language-switch" aria-label="Language selector">
@@ -140,26 +146,35 @@
       </p>
       <div class="mobile-intro-meta">
         <nav class="tool-nav compact" aria-label="Tools">
-          <a class="active" href="index.html">Comparator</a>
-          <a href="hemi-sync.html">Hemi Sync</a>
+          <a class="active" href="index.html" aria-current="page" data-tool-icon="tuning">
+            <strong>Comparator</strong>
+          </a>
+          <a href="hemi-sync.html" data-tool-icon="hemi">
+            <strong>Hemi Sync</strong>
+          </a>
         </nav>
       </div>
     </section>
 
     
     <aside class="sidebar" aria-label="Sound controls">
-      <section class="card section">
+      <section class="card section control-panel">
         <h2 data-i18n="sectionChord">1. Chord</h2>
 
-        <label><span data-i18n="rootNoteLabel">Root Note</span>
-          <select id="rootSelect"></select>
-        </label>
+        <div class="control-block root-control">
+          <label><span data-i18n="rootNoteLabel">Root Note</span>
+            <select id="rootSelect"></select>
+          </label>
+        </div>
 
-        <div class="chords" id="chordButtons" aria-label="Chord types"></div>
+        <div class="control-block chord-control">
+          <p class="control-caption">Chord</p>
+          <div class="chords" id="chordButtons" aria-label="Chord types"></div>
+        </div>
 
-        <div class="grid2">
-          <button class="primary" type="button" id="playBtn" data-i18n="playChordBtn">Play Chord</button>
-          <button class="ghost" type="button" id="stopBtn" data-i18n="stopBtn">Stop</button>
+        <div class="grid2 control-block playback-control">
+          <button class="primary" type="button" id="playBtn" aria-label="Play/Stop" data-action-icon="play">Play</button>
+          <button class="secondary" type="button" id="randomChord" data-i18n="randomChordBtn" data-action-icon="random">Random Chord</button>
         </div>
 
         <details class="advanced" open>
@@ -168,6 +183,17 @@
             <input id="volume" type="range" min="0" max="0.4" step="0.01" value="0.32">
           </label>
 
+          <label><span data-i18n="visualSpeedLabel">Visual Speed</span>
+            <input id="visualSpeed" type="range" min="0.25" max="3" step="0.05" value="1">
+          </label>
+        </details>
+
+        <div class="control-block keyboard-block">
+          <p class="control-caption">Keyboard</p>
+          <div class="keyboard" id="keyboard" aria-label="Piano keyboard"></div>
+        </div>
+
+        <div class="control-block waveform-control">
           <label><span data-i18n="waveformLabel">Waveform</span>
             <select id="waveform">
               <option value="sine" selected data-i18n="waveformSine">Clean Sine</option>
@@ -175,18 +201,7 @@
               <option value="sawtooth" data-i18n="waveformSawtooth">Bright Sawtooth</option>
             </select>
           </label>
-
-          <label><span data-i18n="visualSpeedLabel">Visual Speed</span>
-            <input id="visualSpeed" type="range" min="0.25" max="3" step="0.05" value="1">
-          </label>
-
-          <div class="grid2">
-            <button class="ghost" type="button" id="resetSpeed" data-i18n="resetSpeedBtn">Reset Speed</button>
-            <button class="ghost" type="button" id="randomChord" data-i18n="randomChordBtn">Random Chord</button>
-          </div>
-        </details>
-
-        <div class="keyboard" id="keyboard" aria-label="Piano keyboard"></div>
+        </div>
       </section>
     </aside>
 
@@ -214,7 +229,7 @@
         <article class="card canvas-card tuning-card" data-tuning-card="432">
           <div class="visual-toolbar">
             <h2 data-i18n="harmonicGeometry432">Harmonic Geometry, 432 Hz</h2>
-            <button class="ghost" type="button" id="listen432Visual" data-i18n="listen432Btn">Listen 432 Hz</button>
+            <button class="ghost" type="button" id="listen432Visual" data-i18n="listen432Btn" data-action-icon="tuning">Use 432 Hz</button>
           </div>
           <p class="intro" data-i18n="geometryDesc432">A stable generative map based on the active chord proportions.</p>
           <canvas id="waveCanvas" width="1000" height="520" role="img" aria-label="432 Hz harmonic geometry visualization for the active chord"></canvas>
@@ -227,7 +242,7 @@
         <article class="card canvas-card tuning-card" data-tuning-card="440">
           <div class="visual-toolbar">
             <h2 data-i18n="harmonicGeometry440">Comparative Geometry, 440 Hz</h2>
-            <button class="ghost" type="button" id="listen440Visual" data-i18n="listen440Btn">Listen 440 Hz</button>
+            <button class="ghost" type="button" id="listen440Visual" data-i18n="listen440Btn" data-action-icon="tuning">Use 440 Hz</button>
           </div>
           <p class="intro" data-i18n="geometryDesc440">A comparative map showing the same chord under a higher A4 reference.</p>
           <canvas id="circleCanvas" width="1000" height="520" role="img" aria-label="440 Hz comparative harmonic geometry visualization for the active chord"></canvas>
@@ -243,8 +258,8 @@
           <div class="visual-toolbar">
             <h2 data-i18n="resonantPlateLabel">Cymatics-inspired Nodal Model</h2>
             <div class="plate-actions">
-              <button class="ghost" type="button" id="listen432Plate">432 Hz</button>
-              <button class="ghost" type="button" id="listen440Plate">440 Hz</button>
+              <button class="ghost" type="button" id="listen432Plate" data-i18n="listen432Btn" data-action-icon="tuning">Use 432 Hz</button>
+              <button class="ghost" type="button" id="listen440Plate" data-i18n="listen440Btn" data-action-icon="tuning">Use 440 Hz</button>
             </div>
           </div>
           <p class="intro mobile-compact" data-i18n="resonantPlateDesc">
@@ -354,12 +369,27 @@
           <input id="mobileVolume" type="range" min="0" max="0.4" step="0.01" value="0.32">
         </label>
       </div>
-      <div class="dock-row three">
-        <button class="primary" type="button" id="mobilePlayBtn" data-i18n="mobilePlayBtn">Play</button>
-        <button class="ghost" type="button" id="mobileStopBtn" data-i18n="stopBtn">Stop</button>
-        <button class="ghost" type="button" id="mobileRandomBtn" data-i18n="mobileRandomBtn">Random</button>
+      <div class="dock-row two">
+        <button class="primary" type="button" id="mobilePlayBtn" aria-label="Play/Stop" data-action-icon="play">Play</button>
+        <button class="secondary" type="button" id="mobileRandomBtn" data-i18n="mobileRandomBtn" data-action-icon="random">Random</button>
       </div>
     </div>
+
+  <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
+    <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
+    <section class="tutorial-coach" role="status" aria-live="polite" aria-labelledby="tutorialTitle" aria-describedby="tutorialText">
+      <div class="tutorial-progress" aria-label="Progreso del tutorial">
+        <span class="tutorial-dot active" data-tutorial-dot="0"></span>
+        <span class="tutorial-dot" data-tutorial-dot="1"></span>
+        <span class="tutorial-dot" data-tutorial-dot="2"></span>
+        <span class="tutorial-dot" data-tutorial-dot="3"></span>
+      </div>
+      <p class="eyebrow" id="tutorialEyebrow">Primeros pasos</p>
+      <h2 id="tutorialTitle">Pulsar Play</h2>
+      <p class="intro" id="tutorialText">Pulsa Play para iniciar el sonido y ver las visualizaciones en movimiento.</p>
+      <p class="tutorial-hint" id="tutorialHint">Pulsa el control senalado para continuar.</p>
+    </section>
+  </div>
 
   <script type="module" src="src/app.js"></script>
 </body>

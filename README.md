@@ -64,6 +64,17 @@ npm run check
 
 This runs basic JavaScript syntax validation across the app modules.
 
+## Hard Reset Development From GitHub
+
+Use this only when you want the local `development` branch to exactly match GitHub and discard local changes on that branch.
+
+```bash
+git fetch origin
+git checkout development
+git reset --hard origin/development
+git clean -fd
+```
+
 ## Deploy to Netlify
 
 1. Create a new site in Netlify.

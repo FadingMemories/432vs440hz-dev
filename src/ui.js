@@ -12,6 +12,7 @@ export function initUI(actions) {
   populateChordControls(actions);
   populateKeyboard(actions);
   bindStaticControls(actions);
+  initTutorial();
   updateUI();
 }
 
@@ -88,17 +89,23 @@ function populateKeyboard(actions) {
       syncControls();
       updateUI();
       actions.play();
+      updatePlayButtonText();
     });
     $('keyboard').appendChild(button);
   });
 }
 
 function bindStaticControls(actions) {
-  $('playBtn').addEventListener('click', actions.play);
-  $('mobilePlayBtn').addEventListener('click', actions.play);
-  $('stopBtn').addEventListener('click', actions.stop);
-  $('mobileStopBtn').addEventListener('click', actions.stop);
-  $('mobileRandomBtn').addEventListener('click', () => randomizeChord(actions));
+  const togglePlayback = () => {
+    if (state.isPlaying) actions.stop();
+    else actions.play();
+    updatePlayButtonText();
+  };
+
+  $('playBtn')?.addEventListener('click', togglePlayback);
+  $('mobilePlayBtn')?.addEventListener('click', togglePlayback);
+  $('randomChord')?.addEventListener('click', () => randomizeChord(actions));
+  $('mobileRandomBtn')?.addEventListener('click', () => randomizeChord(actions));
 
   $('listen432Visual').addEventListener('click', () => actions.setBase(432));
   $('listen440Visual').addEventListener('click', () => actions.setBase(440));
@@ -128,11 +135,6 @@ function bindStaticControls(actions) {
 
   $('waveform').addEventListener('change', actions.replayIfNeeded);
   $('visualSpeed').addEventListener('input', markNodalDirty);
-  $('resetSpeed').addEventListener('click', () => {
-    $('visualSpeed').value = 1;
-    markNodalDirty();
-  });
-  $('randomChord').addEventListener('click', () => randomizeChord(actions));
 }
 
 export function getPlaybackSettings() {
@@ -165,8 +167,193 @@ export function updateUI() {
   $('spreadReadout').textContent = `+${formatNumber(cents, 1)} cents`;
 
   setActiveBase(state.base);
+  updatePlayButtonText();
   updateKeyboard(chord);
   updateNoteTable();
+}
+
+function updatePlayButtonText() {
+  const label = state.isPlaying ? 'Stop' : 'Play';
+  ['playBtn', 'mobilePlayBtn'].forEach((id) => {
+    const button = $(id);
+    if (!button) return;
+    button.textContent = label;
+    button.dataset.actionIcon = state.isPlaying ? 'stop' : 'play';
+    button.setAttribute('aria-pressed', String(state.isPlaying));
+  });
+}
+
+function initTutorial() {
+  if (window.matchMedia('(max-width: 720px)').matches) return;
+
+  const overlay = $('tutorialOverlay');
+  const coach = document.querySelector('.tutorial-coach');
+  const spotlight = $('tutorialSpotlight');
+  const eyebrow = $('tutorialEyebrow');
+  const title = $('tutorialTitle');
+  const text = $('tutorialText');
+  const hint = $('tutorialHint');
+  if (!overlay || !coach || !spotlight || !eyebrow || !title || !text || !hint) return;
+
+  const storageKey = '432vs440hz:guidedTutorialSeen:v3';
+  let requiredBase = 440;
+  const steps = [
+    {
+      title: () => t('tutorialPlayTitle'),
+      text: () => t('tutorialPlayText'),
+      getTarget: () => getFirstVisibleElement(['#playBtn', '#mobilePlayBtn']),
+      isMatch: (target) => Boolean(target.closest?.('#playBtn, #mobilePlayBtn')),
+    },
+    {
+      title: () => t('tutorialCompareTitle'),
+      text: () => requiredBase === 440
+        ? t('tutorialCompare440Text')
+        : t('tutorialCompare432Text'),
+      getTarget: () => requiredBase === 440
+        ? getFirstVisibleElement(['#listen440Visual', '#listen440Plate'])
+        : getFirstVisibleElement(['#listen432Visual', '#listen432Plate']),
+      isMatch: (target) => Boolean(target.closest?.(
+        requiredBase === 440
+          ? '#listen440Visual, #listen440Plate'
+          : '#listen432Visual, #listen432Plate'
+      )),
+      onComplete: () => {
+        if (requiredBase === 440) {
+          requiredBase = 432;
+          renderStep();
+          return false;
+        }
+        return true;
+      },
+    },
+    {
+      title: () => t('tutorialRandomTitle'),
+      text: () => t('tutorialRandomText'),
+      getTarget: () => getFirstVisibleElement(['#randomChord', '#mobileRandomBtn']),
+      isMatch: (target) => Boolean(target.closest?.('#randomChord, #mobileRandomBtn')),
+    },
+    {
+      title: () => t('tutorialPlateTitle'),
+      text: () => t('tutorialPlateText'),
+      getTarget: () => getFirstVisibleElement(['.plate-actions', '#listen432Plate', '#listen440Plate']),
+      isMatch: (target) => Boolean(target.closest?.('#listen432Plate, #listen440Plate')),
+    },
+  ];
+  let currentStep = 0;
+
+  const hasSeenTutorial = () => {
+    try {
+      return localStorage.getItem(storageKey) === 'true';
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const markSeen = () => {
+    try {
+      localStorage.setItem(storageKey, 'true');
+    } catch (error) {
+      // Browsers can disable storage; the tutorial still works for the session.
+    }
+  };
+
+  const clamp = (value, min, max) => {
+    if (max < min) return min;
+    return Math.min(Math.max(value, min), max);
+  };
+
+  const positionTutorial = () => {
+    const target = steps[currentStep]?.getTarget();
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+    const padding = 8;
+    spotlight.style.top = `${rect.top - padding}px`;
+    spotlight.style.left = `${rect.left - padding}px`;
+    spotlight.style.width = `${rect.width + padding * 2}px`;
+    spotlight.style.height = `${rect.height + padding * 2}px`;
+
+    const coachRect = coach.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const gap = 14;
+    const left = clamp(
+      rect.left + rect.width / 2 - coachRect.width / 2,
+      12,
+      viewportWidth - coachRect.width - 12
+    );
+    let top = rect.bottom + gap;
+    if (top + coachRect.height > viewportHeight - 12) {
+      top = rect.top - coachRect.height - gap;
+    }
+    coach.style.left = `${left}px`;
+    coach.style.top = `${Math.max(12, top)}px`;
+  };
+
+  function renderStep() {
+    const step = steps[currentStep];
+    eyebrow.textContent = t('tutorialEyebrow');
+    hint.textContent = t('tutorialHint');
+    title.textContent = typeof step.title === 'function' ? step.title() : step.title;
+    text.textContent = typeof step.text === 'function' ? step.text() : step.text;
+    document.querySelectorAll('[data-tutorial-dot]').forEach((dot) => {
+      dot.classList.toggle('active', Number(dot.dataset.tutorialDot) === currentStep);
+    });
+    step.getTarget()?.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+    positionTutorial();
+    window.setTimeout(positionTutorial, 260);
+  }
+
+  const closeTutorial = () => {
+    markSeen();
+    overlay.classList.remove('is-visible');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('click', handleTutorialAction, true);
+    document.removeEventListener('change', handleTutorialAction, true);
+    window.removeEventListener('resize', positionTutorial);
+    window.removeEventListener('scroll', positionTutorial, true);
+    window.removeEventListener('languagechange', renderStep);
+  };
+
+  if (hasSeenTutorial()) return;
+
+  function handleTutorialAction(event) {
+    const step = steps[currentStep];
+    if (!step?.isMatch(event.target, event.type)) return;
+
+    const shouldAdvance = step.onComplete ? step.onComplete() : true;
+    if (!shouldAdvance) return;
+
+    currentStep += 1;
+    if (currentStep >= steps.length) {
+      closeTutorial();
+      return;
+    }
+    renderStep();
+  }
+
+  overlay.classList.add('is-visible');
+  overlay.setAttribute('aria-hidden', 'false');
+  renderStep();
+  document.addEventListener('click', handleTutorialAction, true);
+  document.addEventListener('change', handleTutorialAction, true);
+  window.addEventListener('resize', positionTutorial);
+  window.addEventListener('scroll', positionTutorial, true);
+  window.addEventListener('languagechange', renderStep);
+}
+
+function getFirstVisibleElement(selectors) {
+  for (const selector of selectors) {
+    const candidates = document.querySelectorAll(selector);
+    for (const candidate of candidates) {
+      const rect = candidate.getBoundingClientRect();
+      const style = window.getComputedStyle(candidate);
+      if (rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none') {
+        return candidate;
+      }
+    }
+  }
+  return null;
 }
 
 function updateKeyboard(chord) {
@@ -200,10 +387,14 @@ function updateNoteTable() {
 
 function setActiveBase(base) {
   ['listen432Visual', 'listen432Plate'].forEach((id) => {
-    $(id)?.classList.toggle('active', base === 432);
+    const button = $(id);
+    button?.classList.toggle('active', base === 432);
+    button?.setAttribute('aria-pressed', String(base === 432));
   });
   ['listen440Visual', 'listen440Plate'].forEach((id) => {
-    $(id)?.classList.toggle('active', base === 440);
+    const button = $(id);
+    button?.classList.toggle('active', base === 440);
+    button?.setAttribute('aria-pressed', String(base === 440));
   });
 
   document.querySelectorAll('[data-tuning-card]').forEach((card) => {
@@ -221,4 +412,5 @@ function randomizeChord(actions) {
   syncControls();
   updateUI();
   actions.play();
+  updatePlayButtonText();
 }

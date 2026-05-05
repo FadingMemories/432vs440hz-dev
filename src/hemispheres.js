@@ -1,4 +1,4 @@
-import { initI18n } from './i18n.js';
+import { initI18n, t } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -12,8 +12,8 @@ const ctx = {
 
 const bands = {
   delta: {
-    title: 'Delta - deep rest',
-    desc: 'Fundamental-adjacent carriers near 90 / 120 / 150 optimized for smoother harmonic relationships and reduced fatigue.',
+    titleKey: 'hemiBandDeltaTitle',
+    descKey: 'hemiBandDeltaDesc',
     presets: [
       [96, 99, 'Deep Rest 3 Hz', 'Near-ideal low carrier with highly stable restorative pulse.'],
       [117, 120, 'Balanced Delta 3 Hz', 'Close to 120 target with smoother resonance behavior.'],
@@ -22,8 +22,8 @@ const bands = {
   },
 
   theta: {
-    title: 'Theta - meditation',
-    desc: 'Meditative presets using nearby harmonic sweet spots rather than arbitrary round numbers.',
+    titleKey: 'hemiBandThetaTitle',
+    descKey: 'hemiBandThetaDesc',
     presets: [
       [96, 101, 'Grounding Theta 5 Hz', 'Low stable theta with soft perceptual load.'],
       [117, 123, 'Gateway Theta 6 Hz', 'Optimized mid-band meditation preset.'],
@@ -32,8 +32,8 @@ const bands = {
   },
 
   alpha: {
-    title: 'Alpha - relaxation',
-    desc: 'Relaxation presets centered on stronger nearby fundamentals for stability and comfort.',
+    titleKey: 'hemiBandAlphaTitle',
+    descKey: 'hemiBandAlphaDesc',
     presets: [
       [108, 116, 'Soft Alpha 8 Hz', 'Warm, highly sustainable alpha relaxation.'],
       [117, 125, 'Balanced Alpha 8 Hz', 'Near-120 harmonic optimization.'],
@@ -42,8 +42,8 @@ const bands = {
   },
 
   beta: {
-    title: 'Beta - focus',
-    desc: 'Focus-oriented carriers adjusted toward cleaner structural frequency anchors.',
+    titleKey: 'hemiBandBetaTitle',
+    descKey: 'hemiBandBetaDesc',
     presets: [
       [108, 122, 'Gentle Focus 14 Hz', 'Productive beta with lower fatigue.'],
       [126, 142, 'Work Beta 16 Hz', 'Strong attentional pacing near ideal beta fundamentals.'],
@@ -52,8 +52,8 @@ const bands = {
   },
 
   gamma: {
-    title: 'Gamma - alertness',
-    desc: 'Experimental gamma presets using nearby structural anchors to reduce excessive harshness.',
+    titleKey: 'hemiBandGammaTitle',
+    descKey: 'hemiBandGammaDesc',
     presets: [
       [108, 144, 'Soft Gamma 36 Hz', 'Lower-stress gamma with strong clarity.'],
       [126, 166, 'Balanced Gamma 40 Hz', 'Mid gamma with improved harmonic spread.'],
@@ -62,7 +62,7 @@ const bands = {
   },
 };
 
-let activeBand = 'theta';
+let activeBand = 'delta';
 let running = true;
 let channelAMuted = false;
 let channelBMuted = false;
@@ -74,6 +74,28 @@ let gainB = null;
 let merger = null;
 let audioOn = false;
 let startTime = performance.now();
+
+function updateAudioButtonText() {
+  const label = audioOn ? t('stopBtn') : t('mobilePlayBtn');
+  ['audioBtn', 'mobileAudioPlayBtn'].forEach((id) => {
+    const button = $(id);
+    if (!button) return;
+    button.textContent = label;
+    button.dataset.actionIcon = audioOn ? 'stop' : 'play';
+    button.setAttribute('aria-pressed', String(audioOn));
+  });
+}
+
+function updateVisualButtonText() {
+  const label = running ? t('hemiPauseVisuals') : t('hemiResumeVisuals');
+  ['pauseVisualBtn', 'mobilePauseVisualBtn'].forEach((id) => {
+    const button = $(id);
+    if (!button) return;
+    button.textContent = label;
+    button.dataset.actionIcon = running ? 'pause' : 'resume';
+    button.setAttribute('aria-pressed', String(!running));
+  });
+}
 
 function numberValue(id) {
   return parseFloat($(id).value);
@@ -139,26 +161,36 @@ function renderStillWave() {
 function renderPresetChips(bandKey) {
   const band = bands[bandKey];
   const row = $('presetChips');
+  const mobileRow = $('mobilePresetChips');
   const description = $('bandDescription');
 
   if (!row || !description) return;
 
   row.innerHTML = '';
-  description.textContent = band.desc;
+  if (mobileRow) mobileRow.innerHTML = '';
+  description.textContent = t(band.descKey);
 
-  band.presets.forEach((preset, index) => {
+  function createPresetChip(preset, index, isMobile = false) {
     const chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'preset-chip' + (index === 0 ? ' active' : '');
     chip.innerHTML = `<strong>${preset[2]} - ${preset[0]} / ${preset[1]} Hz</strong><small>${preset[3]}</small>`;
     chip.addEventListener('click', () => {
-      document.querySelectorAll('.preset-chip').forEach((button) => button.classList.remove('active'));
-      chip.classList.add('active');
+      document.querySelectorAll('.preset-chip').forEach((button) => {
+        button.classList.toggle('active', button.dataset.presetIndex === String(index));
+      });
       $('fA').value = preset[0];
       $('fB').value = preset[1];
       renderStillWave();
     });
-    row.appendChild(chip);
+    chip.dataset.presetIndex = String(index);
+    if (isMobile) chip.classList.add('mobile-preset-chip');
+    return chip;
+  }
+
+  band.presets.forEach((preset, index) => {
+    row.appendChild(createPresetChip(preset, index));
+    if (mobileRow) mobileRow.appendChild(createPresetChip(preset, index, true));
   });
 }
 
@@ -170,7 +202,13 @@ function renderBand(bandKey) {
     button.classList.toggle('active', button.dataset.band === bandKey);
   });
 
-  $('bandTitle').textContent = band.title;
+  const mobileRow = $('mobilePresetChips');
+  const activeButton = document.querySelector(`.band-btn[data-band="${bandKey}"]`);
+  if (mobileRow && activeButton) {
+    activeButton.insertAdjacentElement('afterend', mobileRow);
+  }
+
+  $('bandTitle').textContent = t(band.titleKey);
   $('fA').value = band.presets[0][0];
   $('fB').value = band.presets[0][1];
   renderPresetChips(bandKey);
@@ -267,8 +305,8 @@ async function startAudio() {
   audioOn = true;
   running = true;
   startTime = performance.now();
-  $('audioBtn').textContent = 'Stop Audio';
-  $('pauseVisualBtn').textContent = 'Pause Visuals';
+  updateAudioButtonText();
+  updateVisualButtonText();
   requestAnimationFrame(loop);
 }
 
@@ -278,12 +316,14 @@ async function stopAudio() {
   oscB.stop();
   await audioContext.close();
   audioOn = false;
+  running = true;
   audioContext = null;
   oscA = null;
   oscB = null;
   gainA = null;
   gainB = null;
-  $('audioBtn').textContent = 'Start Audio';
+  updateAudioButtonText();
+  updateVisualButtonText();
   renderStillWave();
 }
 
@@ -295,10 +335,13 @@ async function toggleAudio() {
 function setMuteButtonState(channel, muted) {
   const desktopButton = $(channel === 'A' ? 'muteA' : 'muteB');
   const mobileButton = $(channel === 'A' ? 'mobileMuteA' : 'mobileMuteB');
-  const mobileLabel = muted ? 'Unmute' : 'Mute';
-  if (desktopButton) desktopButton.classList.toggle('active', muted);
+  const label = muted ? t('hemiUnmuteBtn') : t('hemiMuteBtn');
+  if (desktopButton) {
+    desktopButton.textContent = label;
+    desktopButton.classList.toggle('active', muted);
+  }
   if (mobileButton) {
-    mobileButton.textContent = mobileLabel;
+    mobileButton.textContent = label;
     mobileButton.classList.toggle('active', muted);
   }
 }
@@ -317,12 +360,8 @@ function toggleMute(channel) {
 
 function pauseVisuals() {
   running = !running;
-  $('pauseVisualBtn').textContent = running ? 'Pause Visuals' : 'Resume Visuals';
+  updateVisualButtonText();
   if (running && audioOn) requestAnimationFrame(loop);
-}
-
-function resetWaveSpeed() {
-  $('waveSpeed').value = 1;
 }
 
 function bindEvents() {
@@ -361,18 +400,13 @@ function bindEvents() {
 
   $('waveSpeed').addEventListener('input', renderStillWave);
   $('waveAmp').addEventListener('input', renderStillWave);
-  $('resetWaveSpeed').addEventListener('click', () => {
-    resetWaveSpeed();
-    renderStillWave();
-  });
 
   document.querySelectorAll('.band-btn').forEach((button) => {
     button.addEventListener('click', () => renderBand(button.dataset.band));
   });
 
-  $('mobileAudioPlayBtn').addEventListener('click', toggleAudio);
-  $('mobileAudioStopBtn').addEventListener('click', stopAudio);
-  $('mobilePauseVisualBtn').addEventListener('click', pauseVisuals);
+  $('mobileAudioPlayBtn')?.addEventListener('click', toggleAudio);
+  $('mobilePauseVisualBtn')?.addEventListener('click', pauseVisuals);
 
   if ($('mobileFAInput')) {
     $('mobileFAInput').addEventListener('input', (event) => {
@@ -386,11 +420,23 @@ function bindEvents() {
       renderStillWave();
     });
   }
+
+  window.addEventListener('languagechange', () => {
+    renderBand(activeBand);
+    setMuteButtonState('A', channelAMuted);
+    setMuteButtonState('B', channelBMuted);
+    updateAudioButtonText();
+    updateVisualButtonText();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   initI18n();
   bindEvents();
   renderBand(activeBand);
+  setMuteButtonState('A', channelAMuted);
+  setMuteButtonState('B', channelBMuted);
+  updateAudioButtonText();
+  updateVisualButtonText();
   renderStillWave();
 });

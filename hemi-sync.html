@@ -111,15 +111,21 @@
 <body>
   <header class="site-header">
     <div>
-      <p class="eyebrow">Hemispheric brain synchronization</p>
+      <p class="eyebrow" data-i18n="hemiEyebrow">Hemispheric brain synchronization</p>
       <h1>Hemi Sync</h1>
-      <p class="intro">
+      <p class="intro" data-i18n="hemiSubtitle">
         Explore the Hemi Sync technique through two stereo tones, the perceived beat created by their difference,
         and visual models of phase relationship and hemispheric synchronization.
       </p>
       <nav class="tool-nav" aria-label="Tools">
-        <a href="index.html">432 / 440 Comparator</a>
-        <a class="active" href="hemi-sync.html">Hemi Sync</a>
+        <a href="index.html" data-tool-icon="tuning">
+          <strong>432 / 440 Comparator</strong>
+          <span data-i18n="toolComparatorDesc">Tuning, chords and nodal patterns</span>
+        </a>
+        <a class="active" href="hemi-sync.html" aria-current="page" data-tool-icon="hemi">
+          <strong>Hemi Sync</strong>
+          <span data-i18n="toolHemiDesc">Stereo beat frequency tool</span>
+        </a>
       </nav>
     </div>
     <nav class="language-switch" aria-label="Language selector">
@@ -130,16 +136,20 @@
 
   <main class="app hemi-shell" id="main">
     <section class="card mobile-page-intro" aria-label="Hemi Sync introduction">
-      <p class="eyebrow">Brain Hemisphere synchronization</p>
+      <p class="eyebrow" data-i18n="hemiMobileEyebrow">Brain Hemisphere synchronization</p>
       <p class="mobile-title">Hemi Sync</p>
-      <p class="intro">
+      <p class="intro" data-i18n="hemiSubtitle">
         Explore the Hemi Sync technique through two stereo tones, the perceived beat created by their difference,
         and visual models of phase relationship and hemispheric synchronization. 
       </p>
       <div class="mobile-intro-meta">
         <nav class="tool-nav compact" aria-label="Tools">
-          <a href="index.html">Comparator</a>
-          <a class="active" href="hemi-sync.html">Hemi Sync</a>
+          <a href="index.html" data-tool-icon="tuning">
+            <strong>Comparator</strong>
+          </a>
+          <a class="active" href="hemi-sync.html" aria-current="page" data-tool-icon="hemi">
+            <strong>Hemi Sync</strong>
+          </a>
         </nav>
       </div>
     </section>
@@ -147,67 +157,74 @@
     <section class="visuals hemi-visuals" aria-label="Wave visualization">
       <article class="card canvas-card">
         <div class="visual-toolbar">
-          <h2>Wave Movement</h2>
+          <h2 data-i18n="hemiWaveTitle">Wave Movement</h2>
         </div>
-        <p class="intro">Stereo wave movement visualization showing both channels and their combined pattern.</p>
+        <p class="intro" data-i18n="hemiWaveIntro">Stereo wave movement visualization showing both channels and their combined pattern.</p>
         <canvas id="waves" width="1200" height="540" role="img" aria-label="Stereo wave movement visualization"></canvas>
         <div class="hemi-settings">
-          <label>Visual time scale
+          <label><span data-i18n="hemiVisualScale">Visual time scale</span>
             <input id="waveSpeed" type="range" min="0.25" max="4" step="0.05" value="4">
           </label>
-          <button class="ghost mini-btn" type="button" id="resetWaveSpeed">Reset</button>
-          <label>Wave and beat amplitude
+          <label><span data-i18n="hemiWaveAmp">Wave and beat amplitude</span>
             <input id="waveAmp" type="range" min="0.2" max="1" step="0.01" value="0.8">
           </label>
         </div>
-        <p class="hint">The wave panel shows both channels and their combined movement. It is a visual guide, not a measurement instrument.</p>
+        <p class="hint" data-i18n="hemiWaveHint">The wave panel shows both channels and their combined movement. It is a visual guide, not a measurement instrument.</p>
       </article>
     </section>
 
-    <section class="card section hemi-control-strip" aria-label="Sound controls">
+    <section class="card section control-panel hemi-control-strip" aria-label="Sound controls">
       <div class="hemi-control-actions">
-        <h2>Audio Controls</h2>
-        <div class="grid2">
-          <button class="primary" type="button" id="audioBtn">Start Audio</button>
-          <button class="ghost" type="button" id="pauseVisualBtn">Pause Visuals</button>
-        </div>
+        <h2 data-i18n="hemiAudioControls">Audio Controls</h2>
       </div>
 
       <div class="hemi-frequency-grid">
-        <label class="master-volume-control">Master Volume
-          <input id="masterVolume" type="range" min="0" max="0.2" step="0.005" value="0.08">
-        </label>
-        <div class="hemi-field-grid">
-          <label>Left channel (Hz)
-            <input id="fA" type="number" min="20" max="2000" step="1" value="120">
-          </label>
-          <label>Right channel (Hz)
-            <input id="fB" type="number" min="20" max="2000" step="1" value="124">
+        <div class="control-block hemi-field-grid">
+          <div class="hemi-channel-row">
+            <label><span data-i18n="hemiLeftChannel">Left channel (Hz)</span>
+              <input id="fA" type="number" min="20" max="2000" step="1" value="120">
+            </label>
+            <button class="ghost mute-btn" type="button" id="muteA">Mute</button>
+          </div>
+          <div class="hemi-channel-row">
+            <label><span data-i18n="hemiRightChannel">Right channel (Hz)</span>
+              <input id="fB" type="number" min="20" max="2000" step="1" value="124">
+            </label>
+            <button class="ghost mute-btn" type="button" id="muteB">Mute</button>
+          </div>
+        </div>
+
+        <div class="control-block master-volume-control">
+          <label><span data-i18n="masterVolumeLabel">Master Volume</span>
+            <input id="masterVolume" type="range" min="0" max="0.2" step="0.005" value="0.08">
           </label>
         </div>
-        <div class="grid2">
-          <button class="ghost" type="button" id="muteA">Mute Left</button>
-          <button class="ghost" type="button" id="muteB">Mute Right</button>
+
+        <div class="grid2 control-block playback-control">
+          <button class="primary" type="button" id="audioBtn" aria-label="Play/Stop" data-action-icon="play">Play</button>
+          <button class="secondary" type="button" id="pauseVisualBtn" data-action-icon="pause">Pause Visuals</button>
         </div>
+
       </div>
 
-      <div class="hemi-sidebar-ranges">
-        <p class="eyebrow">Beat range</p>
+      <div class="control-block hemi-sidebar-ranges">
+        <p class="eyebrow" data-i18n="hemiBeatRange">Beat range</p>
         <div class="hemi-band-grid" aria-label="Hemi Sync categories">
-          <button class="band-btn active" type="button" data-band="delta"><strong>Delta</strong><span>0.5-4 Hz - deep rest</span></button>
-          <button class="band-btn" type="button" data-band="theta"><strong>Theta</strong><span>4-8 Hz - meditation</span></button>
-          <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span>8-12 Hz - relaxation</span></button>
-          <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span>12-30 Hz - focus</span></button>
-          <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span>30+ Hz - alertness</span></button>
+          <button class="band-btn active" type="button" data-band="delta"><strong>Delta</strong><span data-i18n="hemiBandDelta">0.5-4 Hz - deep rest</span></button>
+          <button class="band-btn" type="button" data-band="theta"><strong>Theta</strong><span data-i18n="hemiBandTheta">4-8 Hz - meditation</span></button>
+          <button class="band-btn" type="button" data-band="alpha"><strong>Alpha</strong><span data-i18n="hemiBandAlpha">8-12 Hz - relaxation</span></button>
+          <button class="band-btn" type="button" data-band="beta"><strong>Beta</strong><span data-i18n="hemiBandBeta">12-30 Hz - focus</span></button>
+          <button class="band-btn" type="button" data-band="gamma"><strong>Gamma</strong><span data-i18n="hemiBandGamma">30+ Hz - alertness</span></button>
         </div>
+        <div class="preset-row subtle-presets mobile-band-presets" id="mobilePresetChips" aria-label="Band presets"></div>
       </div>
     </section>
 
     <section class="main hemi-main" aria-label="Hemi Sync">
       <section class="card hemi-program-panel" aria-label="Selected Hemi Sync program">
         <div class="hemi-section-heading">
-          <p class="eyebrow">Selected range</p>
-          <h2><span id="bandTitle">Theta</span></h2>
+          <p class="eyebrow" data-i18n="hemiSelectedRange">Selected range</p>
+          <h2><span id="bandTitle">Delta</span></h2>
           <p class="hint" id="bandDescription">Choose a category and try the presets to hear different stereo beat ranges.</p>
         </div>
 
@@ -216,15 +233,15 @@
 
           <div class="hemi-live-data" aria-label="Current stereo tone data">
             <article>
-              <span>Beat</span>
+              <span data-i18n="hemiBeatLabel">Beat</span>
               <strong><span id="beat">4.00</span> Hz</strong>
             </article>
             <article>
-              <span>Mean tone</span>
+              <span data-i18n="hemiMeanTone">Mean tone</span>
               <strong><span id="carrier">122.00</span> Hz</strong>
             </article>
             <article>
-              <span>Ratio</span>
+              <span data-i18n="hemiRatioLabel">Ratio</span>
               <strong id="ratio">30:31</strong>
             </article>
           </div>
@@ -233,40 +250,40 @@
 
       <section class="info-hub hemi-info-hub" aria-label="Hemi Sync educational reference">
         <article class="card info-card">
-          <h2>What You're Seeing</h2>
-          <p class="intro">The wave view shows two stereo tones and their combined motion. It is a generative visual aid for understanding phase, offset and beat frequency.</p>
-          <p class="intro">The display is not measuring brain activity, hemispheric synchronization or a clinical response.</p>
+          <h2 data-i18n="hemiWhatTitle">What You're Seeing</h2>
+          <p class="intro" data-i18n="hemiWhatText1">The wave view shows two stereo tones and their combined motion. It is a generative visual aid for understanding phase, offset and beat frequency.</p>
+          <p class="intro" data-i18n="hemiWhatText2">The display is not measuring brain activity, hemispheric synchronization or a clinical response.</p>
         </article>
 
         <article class="card info-card">
-          <h2>How Hemi Sync Works</h2>
-          <p class="intro">Hemi Sync style listening uses slightly different tones in the left and right channels. The listener perceives the difference between them as a beat frequency.</p>
-          <p class="intro">Headphones are needed for stereo separation. Keep volume conservative and stop if the sound feels uncomfortable.</p>
+          <h2 data-i18n="hemiHowTitle">How Hemi Sync Works</h2>
+          <p class="intro" data-i18n="hemiHowText1">Hemi Sync style listening uses slightly different tones in the left and right channels. The listener perceives the difference between them as a beat frequency.</p>
+          <p class="intro" data-i18n="hemiHowText2">Headphones are needed for stereo separation. Keep volume conservative and stop if the sound feels uncomfortable.</p>
         </article>
 
         <article class="card info-card">
-          <h2>Hemispheric Synchronization</h2>
-          <p class="intro">Hemi Sync aims to synchronize the brain's left and right hemispheres through binaural beat frequencies. The left hemisphere typically handles logical, analytical thinking, while the right handles creative, intuitive processes. By presenting slightly different frequencies to each ear, the brain perceives a beat that may help bridge these hemispheres for enhanced focus or relaxation.</p>
-          <p class="intro">This concept is based on research into brain wave patterns and altered states of consciousness. It's presented here as an educational exploration of audio phenomena, not a guaranteed therapeutic method.</p>
+          <h2 data-i18n="hemiSyncTitle">Hemispheric Synchronization</h2>
+          <p class="intro" data-i18n="hemiSyncText1">Hemi Sync aims to synchronize the brain's left and right hemispheres through binaural beat frequencies. The left hemisphere typically handles logical, analytical thinking, while the right handles creative, intuitive processes. By presenting slightly different frequencies to each ear, the brain perceives a beat that may help bridge these hemispheres for enhanced focus or relaxation.</p>
+          <p class="intro" data-i18n="hemiSyncText2">This concept is based on research into brain wave patterns and altered states of consciousness. It's presented here as an educational exploration of audio phenomena, not a guaranteed therapeutic method.</p>
         </article>
 
         <article class="card info-card">
-          <h2>History and Context</h2>
-          <p class="intro">Hemi Sync was developed by Robert A. Monroe in the 1970s through his research at The Monroe Institute. Monroe explored out-of-body experiences and consciousness states, leading to the creation of audio technologies for brain wave synchronization.</p>
-          <p class="intro">The technique has been studied in various contexts, including research by government agencies like the CIA in programs such as MK Ultra, which investigated mind control and altered consciousness. While controversial, these studies contributed to understanding brain wave manipulation through audio.</p>
-          <p class="intro">Today, Hemi Sync is used in relaxation, meditation, and educational audio exploration, though scientific evidence for its effects remains limited and debated.</p>
+          <h2 data-i18n="hemiHistoryTitle">History and Context</h2>
+          <p class="intro" data-i18n="hemiHistoryText1">Hemi Sync was developed by Robert A. Monroe in the 1970s through his research at The Monroe Institute. Monroe explored out-of-body experiences and consciousness states, leading to the creation of audio technologies for brain wave synchronization.</p>
+          <p class="intro" data-i18n="hemiHistoryText2">The technique has been studied in various contexts, including research by government agencies like the CIA in programs such as MK Ultra, which investigated mind control and altered consciousness. While controversial, these studies contributed to understanding brain wave manipulation through audio.</p>
+          <p class="intro" data-i18n="hemiHistoryText3">Today, Hemi Sync is used in relaxation, meditation, and educational audio exploration, though scientific evidence for its effects remains limited and debated.</p>
         </article>
 
         <article class="card info-card">
-          <h2>Beat Ranges</h2>
-          <p class="intro">Delta, theta, alpha, beta and gamma labels describe frequency-offset ranges. They are useful listening categories, not guaranteed mental states.</p>
-          <p class="intro">Changing the carrier frequencies changes the tone color while keeping the beat offset comparable.</p>
+          <h2 data-i18n="hemiRangesTitle">Beat Ranges</h2>
+          <p class="intro" data-i18n="hemiRangesText1">Delta, theta, alpha, beta and gamma labels describe frequency-offset ranges. They are useful listening categories, not guaranteed mental states.</p>
+          <p class="intro" data-i18n="hemiRangesText2">Changing the carrier frequencies changes the tone color while keeping the beat offset comparable.</p>
         </article>
 
         <article class="card info-card">
-          <h2>Educational Disclaimer</h2>
-          <p class="intro">This page is an audio visualization and listening tool. It does not make medical, therapeutic or cognitive-performance claims.</p>
-          <p class="intro">Use it as a neutral way to explore stereo beat relationships, waveform movement and careful listening.</p>
+          <h2 data-i18n="hemiDisclaimerTitle">Educational Disclaimer</h2>
+          <p class="intro" data-i18n="hemiDisclaimerText1">This page is an audio visualization and listening tool. It does not make medical, therapeutic or cognitive-performance claims.</p>
+          <p class="intro" data-i18n="hemiDisclaimerText2">Use it as a neutral way to explore stereo beat relationships, waveform movement and careful listening.</p>
         </article>
       </section>
     </section>
@@ -276,29 +293,28 @@
     <div class="dock-row two">
       <div class="bottom-input">
         <label>
-          <span>Left Hz</span>
+          <span data-i18n="hemiLeftHz">Left Hz</span>
           <input id="mobileFAInput" type="number" min="20" max="2000" step="1" value="120" aria-label="Left channel frequency">
         </label>
-        <button class="ghost mini-btn" type="button" id="mobileMuteA">Mute</button>
+        <button class="ghost mini-btn mute-btn" type="button" id="mobileMuteA">Mute</button>
       </div>
       <div class="bottom-input">
         <label>
-          <span>Right Hz</span>
+          <span data-i18n="hemiRightHz">Right Hz</span>
           <input id="mobileFBInput" type="number" min="20" max="2000" step="1" value="124" aria-label="Right channel frequency">
         </label>
-        <button class="ghost mini-btn" type="button" id="mobileMuteB">Mute</button>
+        <button class="ghost mini-btn mute-btn" type="button" id="mobileMuteB">Mute</button>
       </div>
     </div>
     <div class="dock-row">
       <label class="bottom-volume" aria-label="Master volume">
-        <span>Master Volume</span>
+        <span data-i18n="masterVolumeLabel">Master Volume</span>
         <input id="mobileMasterVolume" type="range" min="0" max="0.2" step="0.005" value="0.08">
       </label>
     </div>
-    <div class="dock-row three">
-      <button class="primary" type="button" id="mobileAudioPlayBtn">Play</button>
-      <button class="ghost" type="button" id="mobileAudioStopBtn">Stop</button>
-      <button class="ghost" type="button" id="mobilePauseVisualBtn">Pause Visuals</button>
+    <div class="dock-row two">
+      <button class="primary" type="button" id="mobileAudioPlayBtn" aria-label="Play/Stop" data-action-icon="play">Play</button>
+      <button class="secondary" type="button" id="mobilePauseVisualBtn" data-action-icon="pause">Pause Visuals</button>
     </div>
   </div>
 
