@@ -399,14 +399,8 @@ function initHemiTutorial() {
   const hint = $('hemiTutorialHint');
   if (!overlay || !coach || !spotlight || !eyebrow || !title || !text || !hint) return;
 
-  const storageKey = '432vs440hz:hemiTutorialSeen:v1';
+  const storageKey = '432vs440hz:hemiTutorialSeen:v2';
   const steps = [
-    {
-      title: () => t('hemiTutorialPlayTitle'),
-      text: () => t('hemiTutorialPlayText'),
-      getTarget: () => getFirstVisibleElement(['.hemi-frequency-grid', '#audioBtn']),
-      isMatch: (target) => Boolean(target.closest?.('#audioBtn')),
-    },
     {
       title: () => t('hemiTutorialCategoryTitle'),
       text: () => t('hemiTutorialCategoryText'),
@@ -418,6 +412,12 @@ function initHemiTutorial() {
       text: () => t('hemiTutorialPresetText'),
       getTarget: () => getFirstVisibleElement(['#presetChips']),
       isMatch: (target) => Boolean(target.closest?.('.preset-chip')),
+    },
+    {
+      title: () => t('hemiTutorialPlayTitle'),
+      text: () => t('hemiTutorialPlayText'),
+      getTarget: () => getFirstVisibleElement(['#audioBtn']),
+      isMatch: (target) => Boolean(target.closest?.('#audioBtn')),
     },
   ];
   let currentStep = 0;
